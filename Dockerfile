@@ -70,6 +70,8 @@ CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--al
 
 # Comando para correr docker y que lea los archivoa en D:/Escritorio/data:
 # docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:latest
+# docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:latest
+# docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:latest
 
 # Comando para guardar los resultados en el escritorio
 # docker cp vm:/app/pruebas D:/Escritorio
