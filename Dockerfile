@@ -69,7 +69,7 @@ EXPOSE 8888
 CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
 
 # Comando para correr docker y que lea los archivoa en D:/Escritorio/data:
-# docker run -it --rm -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:latest
+# docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:latest
 
 # Comando para guardar los resultados en el escritorio
 # docker cp vm:/app/pruebas D:/Escritorio
