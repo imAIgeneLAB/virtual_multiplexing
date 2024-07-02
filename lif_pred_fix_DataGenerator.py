@@ -360,7 +360,7 @@ def main_DataGenerator(filepath, role, percentile,patchsize,channels,ch1,ch2,ch3
                     lif_channel = []
                     m_idx = 3
 
-                    # Leemos el archivo lif
+                    # Leemos el archivo .lif
                     lif = LifFile(filepath)
 
                     # Tomamos la primera imagen del archivo lif
@@ -378,7 +378,8 @@ def main_DataGenerator(filepath, role, percentile,patchsize,channels,ch1,ch2,ch3
 
                         # Agregamos el frame a la lista dstack
                         dstack.append(data)
-                        
+                
+                # Si no es .lif ejecuta read_tiled_plane tal cual desde STAPL-3D
                 else:
                     dstack = shading.read_tiled_plane(filepath,i,j)
 
