@@ -363,7 +363,7 @@ def main_DataGenerator(filepath, role, percentile,patchsize,channels,ch1,ch2,ch3
                     # Leemos el archivo .lif
                     lif = LifFile(filepath)
 
-                    # Tomamos la primera imagen del archivo lif
+                    # Tomamos la primera imagen del archivo .lif
                     lim = lif.get_image(0)
                     #frame = lim.get_frame(z=j, c=i, t=0, m=m_idx)
 

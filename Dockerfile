@@ -62,16 +62,19 @@ RUN mkdir -p \
 # Copia todos los archivos locales al contenedor en el directorio /app
 COPY . .
 
-# Expone el puerto 8888 para que Jupyter Notebook sea accesible
+# Expone el puerto 8888 para que Jupyter Notebook sea accesible y el 8097 para que visdom 
 EXPOSE 8888
+EXPOSE 8097
+
 
 # Comando por defecto para ejecutar Jupyter Notebook al iniciar el contenedor
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root & python -m visdom.server -p 8097"]
 
 # Comando para correr docker y que lea los archivoa en D:/Escritorio/data:
 # docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:latest
 # docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:latest
 # docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:latest
+# docker run --gpus all -it -p 8888:8888 -p 8097:8097 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:latest
 
 # Comando para guardar los resultados en el escritorio
 # docker cp vm:/app/pruebas D:/Escritorio
