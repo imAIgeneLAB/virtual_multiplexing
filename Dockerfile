@@ -26,28 +26,38 @@ RUN pip install --no-cache-dir \
     mpi4py==3.0.3 \
     napari \
     nibabel \
+    numpy \
     opencv-python-headless \
     pillow \
     PyPDF2 \
     pyqt5==5.12.3 \
     pyqtwebengine==5.12.1 \
+    pyvista \
     readlif \
     scikit-image \
+    scipy \
     tensorboardX \
-    visdom 
+    torch>=0.4.0 \
+    torchvision \
+    visdom
 
 # --no-cache-dir en pip install evita que pip almacene en caché los archivos de instalación
 # lo que puede reducir el espacio en disco utilizado por el contenedor Docker.
 
 # pillow es reemplazo de PIL
 
+# pyvista for visulization
+
 # Clona los repositorios necesarios
 RUN git clone https://github.com/akabago/ZeroCostDL4Mic-VirtualMultiplexing.git && \
-    git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix
+    git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix && \
+    git clone https://github.com/chinokenochkan/vox2vox
+
+# Run training job: python train.py --dataset <your dataset name>
 
 # Instala los requisitos para pytorch-CycleGAN-and-pix2pix
-RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt
-
+RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt \
+    pip install --no-cache-dir -r vox2vox/requirements.txt
 # Genera la configuración de Jupyter Notebook
 RUN jupyter notebook --generate-config --allow-root
 
@@ -78,3 +88,4 @@ CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow
 
 # Comando para guardar los resultados en el escritorio
 # docker cp vm:/app/pruebas D:/Escritorio
+# docker cp vm:/app/C:/Users/malieva/Desktop
