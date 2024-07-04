@@ -370,7 +370,7 @@ def main_DataGenerator(filepath, role, percentile,patchsize,channels,ch1,ch2,ch3
                     # Obtenemos la cantidad de tiles en la dimensión m (m_idx)
                     n_tiles = lim.dims[m_idx]
 
-                    # Tteramos tile por tile
+                    # Iteramos tile por tile
                     for m in range(n_tiles):
 
                         # Obtenemos el frame para nuestros canales i, plano j (l y u_layer), tiempo 0 y tile m
