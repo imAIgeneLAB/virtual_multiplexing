@@ -1,2 +1,2 @@
-# virtual_multiplexing
-by jose
+# Virtual Multiplexing
+José Carlos Redondo Navarro
