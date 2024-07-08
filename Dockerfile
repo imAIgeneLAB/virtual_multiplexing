@@ -18,7 +18,7 @@ WORKDIR /app
 RUN pip install --no-cache-dir \
     czifile \
     git+https://github.com/miguelhroca/STAPL3D.git \
-    h5py \
+    h5py==2.10.0 \
     ipython \
     ipywidgets \
     jupyter \
@@ -26,7 +26,7 @@ RUN pip install --no-cache-dir \
     mpi4py==3.0.3 \
     napari \
     nibabel \
-    numpy \
+    numpy==1.19.5 \
     opencv-python-headless \
     pillow \
     PyPDF2 \
@@ -43,7 +43,6 @@ RUN pip install --no-cache-dir \
     visdom \
     tensorflow-addons \
     elasticdeform \
-    scikit-learn \
     scikit-learn 
 
 
@@ -57,14 +56,12 @@ RUN pip install --no-cache-dir \
 # Clona los repositorios necesarios
 RUN git clone https://github.com/akabago/ZeroCostDL4Mic-VirtualMultiplexing.git && \
     git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix && \
-    git clone https://github.com/chinokenochkan/vox2vox && \
-    git clone https://github.com/BuiKhoi/Vox2Vox
+    git clone https://github.com/heeycoen/VirtualMultiplexing3D
 
 # Run training job: python train.py --dataset <your dataset name>
 
 # Instala los requisitos para pytorch-CycleGAN-and-pix2pix
-RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt \
-    pip install --no-cache-dir -r vox2vox/requirements.txt
+RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt 
 # Genera la configuración de Jupyter Notebook
 RUN jupyter notebook --generate-config --allow-root
 
