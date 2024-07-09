@@ -36,7 +36,7 @@ RUN pip install --no-cache-dir \
     readlif \
     scikit-image \
     scipy \
-    tensorboardX \
+    tensorboard \
     tensorflow \
     torch>=0.4.0 \
     torchvision \
@@ -72,6 +72,9 @@ RUN mkdir -p \
     /app/Pruebas/traintest \
     /app/Pruebas/preds \
     /app/Pruebas/unmix
+
+# Toma la ruta /app/VirtualMultiplexing3D para ejecutar m'odulos personalizados
+ENV PYTHONPATH /app/VirtualMultiplexing3D
 
 # Copia todos los archivos locales al contenedor en el directorio /app
 COPY . .
