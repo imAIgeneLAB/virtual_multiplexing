@@ -37,7 +37,7 @@ RUN pip install --no-cache-dir \
     scikit-image \
     scipy \
     tensorboardX \
-    tensorflow-gpu==2.2.0 \
+    tensorflow \
     torch>=0.4.0 \
     torchvision \
     visdom \
