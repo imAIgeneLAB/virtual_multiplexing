@@ -45,7 +45,9 @@ RUN pip install --no-cache-dir \
     elasticdeform \
     scikit-learn \
     aicspylibczi \
-    read_lif
+    read_lif \
+    natsort \
+    tifffile
 
 
 # --no-cache-dir en pip install evita que pip almacene en caché los archivos de instalación
