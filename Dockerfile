@@ -16,7 +16,9 @@ WORKDIR /app
 
 # Instala Jupyter Notebook y los paquetes necesarios
 RUN pip install --no-cache-dir \
+    aicspylibczi \
     czifile \
+    elasticdeform \
     git+https://github.com/miguelhroca/STAPL3D.git \
     h5py==2.10.0 \
     ipython \
@@ -25,6 +27,7 @@ RUN pip install --no-cache-dir \
     matplotlib \
     mpi4py==3.0.3 \
     napari \
+    natsort \
     nibabel \
     numpy==1.19.5 \
     opencv-python-headless \
@@ -33,21 +36,18 @@ RUN pip install --no-cache-dir \
     pyqt5==5.12.3 \
     pyqtwebengine==5.12.1 \
     pyvista \
+    read_lif \
     readlif \
     scikit-image \
+    scikit-learn \
     scipy \
     tensorboard \
+    tensorflow-addons \
     tensorflow \
+    tifffile \ 
     torch>=0.4.0 \
     torchvision \
-    visdom \
-    tensorflow-addons \
-    elasticdeform \
-    scikit-learn \
-    aicspylibczi \
-    read_lif \
-    natsort \
-    tifffile
+    visdom
 
 
 # --no-cache-dir en pip install evita que pip almacene en caché los archivos de instalación
