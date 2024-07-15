@@ -1,0 +1,21 @@
+================ Training Loss (Mon Jul 15 11:09:27 2024) ================
+(epoch: 1, iters: 100, time: 2.529, data: 0.086) G_GAN: 0.361 G_L1: 5.075 D_real: 0.371 D_fake: 0.315 
+(epoch: 1, iters: 200, time: 1.452, data: 0.002) G_GAN: 0.313 G_L1: 4.162 D_real: 0.325 D_fake: 0.237 
+(epoch: 1, iters: 300, time: 1.329, data: 0.002) G_GAN: 0.341 G_L1: 4.622 D_real: 0.392 D_fake: 0.259 
+(epoch: 1, iters: 400, time: 2.213, data: 0.002) G_GAN: 0.414 G_L1: 3.334 D_real: 0.450 D_fake: 0.152 
+(epoch: 1, iters: 500, time: 1.335, data: 0.002) G_GAN: 1.333 G_L1: 3.282 D_real: 0.887 D_fake: 0.741 
+(epoch: 1, iters: 600, time: 1.311, data: 0.002) G_GAN: 0.264 G_L1: 4.633 D_real: 0.245 D_fake: 0.270 
+(epoch: 1, iters: 700, time: 1.331, data: 0.002) G_GAN: 0.271 G_L1: 3.962 D_real: 0.291 D_fake: 0.213 
+(epoch: 1, iters: 800, time: 1.365, data: 0.002) G_GAN: 0.437 G_L1: 2.771 D_real: 0.216 D_fake: 0.488 
+(epoch: 1, iters: 900, time: 2.887, data: 0.001) G_GAN: 0.294 G_L1: 4.462 D_real: 0.273 D_fake: 0.259 
+(epoch: 1, iters: 1000, time: 1.806, data: 0.002) G_GAN: 0.242 G_L1: 4.577 D_real: 0.228 D_fake: 0.279 
+(epoch: 2, iters: 100, time: 1.335, data: 0.084) G_GAN: 0.244 G_L1: 4.459 D_real: 0.241 D_fake: 0.261 
+(epoch: 2, iters: 200, time: 2.563, data: 0.002) G_GAN: 0.283 G_L1: 3.189 D_real: 0.282 D_fake: 0.224 
+(epoch: 2, iters: 300, time: 1.883, data: 0.002) G_GAN: 0.287 G_L1: 4.053 D_real: 0.273 D_fake: 0.222 
+(epoch: 2, iters: 400, time: 1.331, data: 0.002) G_GAN: 0.257 G_L1: 4.470 D_real: 0.253 D_fake: 0.247 
+(epoch: 2, iters: 500, time: 1.325, data: 0.002) G_GAN: 0.233 G_L1: 4.583 D_real: 0.230 D_fake: 0.273 
+(epoch: 2, iters: 600, time: 1.382, data: 0.002) G_GAN: 0.300 G_L1: 3.187 D_real: 0.295 D_fake: 0.211 
+(epoch: 2, iters: 700, time: 1.461, data: 0.002) G_GAN: 0.306 G_L1: 2.590 D_real: 0.258 D_fake: 0.215 
+(epoch: 2, iters: 800, time: 1.325, data: 0.002) G_GAN: 0.255 G_L1: 4.307 D_real: 0.258 D_fake: 0.251 
+(epoch: 2, iters: 900, time: 1.337, data: 0.002) G_GAN: 0.267 G_L1: 4.051 D_real: 0.263 D_fake: 0.239 
+(epoch: 2, iters: 1000, time: 1.383, data: 0.002) G_GAN: 0.293 G_L1: 2.996 D_real: 0.290 D_fake: 0.218 

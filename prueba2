@@ -1,0 +1,103 @@
+def get_patch_train(l, uby, ubx, patchsize, channels, channel_stacks, percentiles, mode, alpha, normalization, Brightness):
+    
+    # Generate brightness range list for data augmentation
+    brightnessRange = [0.5, 3]
+
+    # Generating a list containing values between 0.5 and 3 with steps of 0.01 representing brightness degrees that will be sampled for introducing brightness. 
+    l = int(brightnessRange[0] * 100)
+    u = int(brightnessRange[1] * 100)
+    brightnesslist = [round(x * 0.01, 2) for x in range(l, u, 1)]
+
+    # Setting arguments to integers
+    uby = int(uby)
+    ubx = int(ubx)
+
+    # Alpha value for membrane channel
+    if alpha:
+        alpha2 = round(1 - alpha, 2)
+
+    #----------****GETTING COORDINATES FOR PATCH EXTRACTION****----------
+    #get random ij position point in the tile image. 
+    #uby "upper bound y" and ubx "upper bound x" are limits of the y and x axis in the image in order to avoid slecting an area where a patch falls outside of the image range.
+    i_idx = random.randint(0, uby)
+    j_idx = random.randint(0, ubx)
+
+    # Each list contains two indices selecting a range in the corresponding axis starting from the "i or j"th point up to the lenght of a patch size i.e 512
+    yax = [i_idx, (i_idx + patchsize)]
+    xax = [j_idx, (j_idx + patchsize)]
+
+    # Generates a random number representing a random selection of a layer (all layers are considered here)
+    rl = random.randint(0, l - 1)
+
+
+    #----------****EXTRACTING PATCHES****----------
+    # List containing normalized patch from all three channels
+    channel_normalized_patches_list = []
+
+    # For each channel, get the patch using the indices in the yax and xax lists
+    for c in range(channels):
+        # Extracting the patch from channel "c" from the layer "rl" of the stack
+        patch = channel_stacks[c][rl, yax[0]:yax[1], xax[0]:xax[1]]
+
+        if normalization == "ac":
+            # Normalizing the patch using the percentile of the current channel "c"
+            normalized_patch = (patch / percentiles[c]) * 255
+
+        if normalization == "od":
+            # Normalizing the patch using the highest percentile (open detector channel percentile)
+            normalized_patch = (patch / percentiles[2]) * 255
+
+        # Clipping the values, anything higher than 255 is set to 255
+        normalized_patch[normalized_patch > 255] = 255
+        # Adding the normalized patch of current channel "c" to the list which collects all 3 channels
+        channel_normalized_patches_list.append(normalized_patch)
+
+    # Empty 3 channel RGB array for source image
+    source_image = np.zeros((patchsize, patchsize, 3))
+
+    if mode == "synthetic":
+        # Creating the synthetic patch by taking the mean value of the nuclear and membrane channel
+        synthetic_patch = (channel_normalized_patches_list[0] + channel_normalized_patches_list[1]) / 2
+        synthetic_patch = synthetic_patch.astype(np.uint8)
+
+        # Introducing the Synthetic patch in each channel of the source image (RGB)
+        source_image[:, :, 0] = synthetic_patch.astype(np.uint8)
+        source_image[:, :, 1] = synthetic_patch.astype(np.uint8)
+        source_image[:, :, 2] = synthetic_patch.astype(np.uint8)
+
+    elif mode == "weighted":
+        # Creating the synthetic weighted blended patch by taking the mean value of the nuclear and membrane channel blended with alpha and 1-alpha
+        synthetic_patch = cv2.addWeighted(channel_normalized_patches_list[0], alpha2, channel_normalized_patches_list[1], alpha, 0)
+        synthetic_patch = synthetic_patch.astype(np.uint8)
+
+        # Introducing the Synthetic patch in each channel of the source image (RGB)
+        source_image[:, :, 0] = synthetic_patch.astype(np.uint8)
+        source_image[:, :, 1] = synthetic_patch.astype(np.uint8)
+        source_image[:, :, 2] = synthetic_patch.astype(np.uint8)
+
+    elif mode == "open_detector":
+        # Introducing the Real patch in each channel of the source image (RGB)
+        source_image[:, :, 0] = channel_normalized_patches_list[2].astype(np.uint8)
+        source_image[:, :, 1] = channel_normalized_patches_list[2].astype(np.uint8)
+        source_image[:, :, 2] = channel_normalized_patches_list[2].astype(np.uint8)
+
+    if Brightness:
+        # Enhancing brightness of source image
+        if random.randint(0, 100) < int(Brightness):
+            source_image = BrightnessAugmentation(source_image.astype(np.uint8), brightnesslist)
+        else:
+            source_image = source_image.astype(np.uint8)
+
+    #----------****CREATING TARGET IMAGE****----------   ESTO CREO QUE TENGO QUE QUITARLO PORQUE ES EL TARGET IMAGE Y NO SE CREARIA 
+    # Empty 3 channel RGB array for target image
+    target_image = np.zeros((patchsize, patchsize, 3))
+
+    # Introducing the nuclear channel in the Red channel and membrane in the Green channel
+    target_image[:, :, 0] = channel_normalized_patches_list[1].astype(np.uint8)
+    target_image[:, :, 1] = channel_normalized_patches_list[0].astype(np.uint8)
+
+    # Concatenating the source and the target image to get the AB format for pix2pix
+    image_AB = np.concatenate([source_image, target_image], 1)
+
+    # Return the concatenated AB image
+    return image_AB
