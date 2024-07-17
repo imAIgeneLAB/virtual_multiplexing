@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir \
     aicspylibczi \
     czifile \
     elasticdeform \
-    git+https://github.com/miguelhroca/STAPL3D.git \
+    git+https://github.com/josecared/STAPL3D.git \
     h5py==2.10.0 \
     ipython \
     ipywidgets \
@@ -58,7 +58,7 @@ RUN pip install --no-cache-dir \
 # pyvista for visulization
 
 # Clona los repositorios necesarios
-RUN git clone https://github.com/akabago/ZeroCostDL4Mic-VirtualMultiplexing.git && \
+RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
     git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix && \
     git clone https://github.com/heeycoen/VirtualMultiplexing3D
 
@@ -66,7 +66,7 @@ RUN git clone https://github.com/akabago/ZeroCostDL4Mic-VirtualMultiplexing.git 
 
 # Instala los requisitos para pytorch-CycleGAN-and-pix2pix
 RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt 
-# Genera la configuración de Jupyter Notebook
+# Genera la configuración de Jupyter Notebookh
 RUN jupyter notebook --generate-config --allow-root
 
 # Creamos carpetas 
@@ -77,7 +77,7 @@ RUN mkdir -p \
     /app/Pruebas/preds \
     /app/Pruebas/unmix
 
-# Toma la ruta /app/VirtualMultiplexing3D para ejecutar m'odulos personalizados
+# Toma la ruta /app/VirtualMultiplexing3D para ejecutar módulos personalizados
 ENV PYTHONPATH /app/VirtualMultiplexing3D
 
 # Copia todos los archivos locales al contenedor en el directorio /app
