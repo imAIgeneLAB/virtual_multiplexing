@@ -1,0 +1,35 @@
+image_in: "docker_vm_lif_test/04_unmix/lif/test_latest/images"
+prefix: "dataset"  # Prefijo para nombres de salida
+outputdir: "/ruta/donde/guardar/resultado"
+max_workers: 4  # Número máximo de procesos en paralelo
+
+steps:
+  - prep
+  - load
+  - calc
+  - fuse
+  - postprocess
+
+stitching:
+  elsize_z: 0.5  # Tamaño de píxel en el eje z en micrómetros
+  elsize_y: 0.1  # Tamaño de píxel en el eje y en micrómetros
+  elsize_x: 0.1  # Tamaño de píxel en el eje x en micrómetros
+
+  downsample_in_z: 1  # Factor de submuestreo en el eje z
+  downsample_in_y: 2  # Factor de submuestreo en el eje y
+  downsample_in_x: 2  # Factor de submuestreo en el eje x
+
+  min_r: 0.5  # Umbral mínimo de correlación para filtrar desplazamientos
+  max_r: 1.0  # Umbral máximo de correlación para filtrar desplazamientos
+  max_shift_in_z: 10.0  # Máximo desplazamiento en el eje z
+  max_shift_in_y: 10.0  # Máximo desplazamiento en el eje y
+  max_shift_in_x: 10.0  # Máximo desplazamiento en el eje x
+  max_displacement: 15.0  # Desplazamiento total máximo permitido
+
+  relative: 2.0  # Umbral de error relativo para la optimización global
+  absolute: 3.0  # Umbral de error absoluto para la optimización global
+
+  FIJI: "/Applications/Fiji.app/Contents/MacOS/ImageJ-macosx"  # Ruta a la instalación de Fiji
+
+  # Otros parámetros específicos que puedas necesitar según tu configuración
+
