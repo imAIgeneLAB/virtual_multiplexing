@@ -1,15 +1,11 @@
 # Usa una imagen base de Python
 FROM python:3.8-slim
 
-# Instala git, openmpi, gcc y otras herramientas necesarias para importar repositorios de git
+# Instala git, openmpi, gcc, java, maven y otras herramientas necesarias para importar repositorios de git
 RUN apt-get update && \
-    apt-get install -y git build-essential libopenmpi-dev curl unzip && \
+    apt-get install -y git build-essential libopenmpi-dev curl unzip default-jre maven && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
-# Para instalar mpi4py en un contenedor Docker, primero debes instalar
-# las herramientas de compilación necesarias, como GCC y una
-# implementación de MPI (en este caso, libopenmpi-dev). 
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
@@ -32,6 +28,7 @@ RUN pip install --no-cache-dir \
     numpy==1.19.5 \
     opencv-python-headless \
     pillow \
+    pyimagej \
     PyPDF2 \
     pyqt5==5.12.3 \
     pyqtwebengine==5.12.1 \
@@ -48,23 +45,14 @@ RUN pip install --no-cache-dir \
     tifffile \ 
     torch>=0.4.0 \
     torchvision \
-    visdom
-
+    visdom \
+    wandb
+ 
 # Descargar Fiji desde el enlace proporcionado usando curl
-RUN mkdir -p /app/fiji && \
-    curl -L -o /tmp/fiji.zip https://downloads.imagej.net/fiji/latest/fiji-win64.zip && \
-    unzip -q /tmp/fiji.zip -d /app/fiji && \
-    rm /tmp/fiji.zip
-
-# Configuración de variables de entorno
-ENV FIJI_PATH /fiji/ImageJ-linux64
-
-# --no-cache-dir en pip install evita que pip almacene en caché los archivos de instalación
-# lo que puede reducir el espacio en disco utilizado por el contenedor Docker.
-
-# pillow es reemplazo de PIL
-
-# pyvista for visulization
+RUN mkdir -p /app/fiji_linux && \
+    curl -L -o /tmp/fiji_linux.zip https://downloads.imagej.net/fiji/latest/fiji-linux64.zip && \
+    unzip -q /tmp/fiji_linux.zip -d /app/fiji_linux && \
+    rm /tmp/fiji_linux.zip
 
 # Clona los repositorios necesarios
 RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
@@ -72,11 +60,9 @@ RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
     git clone https://github.com/heeycoen/VirtualMultiplexing3D && \
     git clone https://github.com/josecared/STAPL3D
 
-# Run training job: python train.py --dataset <your dataset name>
-
 # Instala los requisitos para pytorch-CycleGAN-and-pix2pix
 RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt 
-# Genera la configuración de Jupyter Notebookh
+# Genera la configuración de Jupyter Notebook
 RUN jupyter notebook --generate-config --allow-root
 
 # Creamos carpetas 
@@ -89,6 +75,9 @@ RUN mkdir -p \
 
 # Toma la ruta /app/VirtualMultiplexing3D para ejecutar módulos personalizados
 ENV PYTHONPATH /app/VirtualMultiplexing3D
+ENV FIJI_PATH /fiji/ImageJ-linux64
+ENV JAVA_HOME /usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH $JAVA_HOME/bin:$PATH
 
 # Copia todos los archivos locales al contenedor en el directorio /app
 COPY . .
@@ -96,7 +85,6 @@ COPY . .
 # Expone el puerto 8888 para Jupyter Notebook y el 8097 para visdom 
 EXPOSE 8888
 EXPOSE 8097
-
 
 # Comando por defecto para ejecutar Jupyter Notebook al iniciar el contenedor
 CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root & python -m visdom.server -p 8097"]
