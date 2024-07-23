@@ -58,7 +58,8 @@ RUN mkdir -p /app/fiji_linux && \
 RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
     git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix && \
     git clone https://github.com/heeycoen/VirtualMultiplexing3D && \
-    git clone https://github.com/josecared/STAPL3D
+    git clone https://github.com/josecared/STAPL3D && \
+    git clone https://github.com/NicolasCristini/ImageJ-Processing-Assistant-Notebook
 
 # Instala los requisitos para pytorch-CycleGAN-and-pix2pix
 RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt 
