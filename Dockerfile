@@ -13,9 +13,10 @@ WORKDIR /app
 # Instala Jupyter Notebook y los paquetes necesarios
 RUN pip install --no-cache-dir \
     aicspylibczi \
+    ashlar \
     czifile \
     elasticdeform \
-    git+https://github.com/josecared/STAPL3D.git \
+    #git+https://github.com/josecared/STAPL3D.git \
     h5py==2.10.0 \
     ipython \
     ipywidgets \
@@ -59,7 +60,12 @@ RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
     git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix && \
     git clone https://github.com/heeycoen/VirtualMultiplexing3D && \
     git clone https://github.com/josecared/STAPL3D && \
-    git clone https://github.com/NicolasCristini/ImageJ-Processing-Assistant-Notebook
+    git clone https://github.com/NicolasCristini/ImageJ-Processing-Assistant-Notebook && \
+    git clone https://github.com/Dream3DLab/Zipping.git && \
+    git clone https://github.com/fmi-basel/RDCNet
+
+
+RUN pip install <rdcnet_fodler>/
 
 # Instala los requisitos para pytorch-CycleGAN-and-pix2pix
 RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt 
