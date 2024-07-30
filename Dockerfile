@@ -61,11 +61,7 @@ RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
     git clone https://github.com/heeycoen/VirtualMultiplexing3D && \
     git clone https://github.com/josecared/STAPL3D && \
     git clone https://github.com/NicolasCristini/ImageJ-Processing-Assistant-Notebook && \
-    git clone https://github.com/Dream3DLab/Zipping.git && \
     git clone https://github.com/fmi-basel/RDCNet
-
-
-RUN pip install <rdcnet_fodler>/
 
 # Instala los requisitos para pytorch-CycleGAN-and-pix2pix
 RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt 
@@ -97,10 +93,10 @@ EXPOSE 8097
 CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root & python -m visdom.server -p 8097"]
 
 # Comando para correr docker y que lea los archivoa en D:/Escritorio/data:
-# docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:bigstitcher
-# docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:bigstitcher
-# docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:bigstitcher
-# docker run --gpus all -it -p 8888:8888 -p 8097:8097 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:bigstitcher
+# docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:stitching
+# docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:stitching
+# docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:stitching
+# docker run --gpus all -it -p 8888:8888 -p 8097:8097 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:stitching
 
 # Comando para guardar los resultados en el escritorio
 # docker cp vm:/app/pruebas D:/Escritorio
