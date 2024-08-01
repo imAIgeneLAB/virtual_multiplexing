@@ -21,7 +21,7 @@ from pathlib import Path
 import json 
 from skimage.measure import label
 
-sys.path.append('/app/data/Zipping-main')
+sys.path.append('/app/data/Zipping-pruebas')
 from general_segmentation_functions.image_handling import get_image,save_image,view_napari
 from skimage.segmentation import relabel_sequential
 
@@ -32,14 +32,14 @@ def segment(image):
     return(segments)
 
 class Zipp3r(object):
-    def __init__(self, image_path):
+    def __init__(self, image_path, output_path):
         
         ### Create a way to start from 3 options:
         ### 1. From an image_path
         ### 2. From a folder with images and a BlockInfo.json
         ### 3. From a Excel with the images and their respective positions
         self.image_path = Path(image_path)
-        self.image_folder = self.image_path.parent
+        self.image_folder = Path(output_path)
         self.image_name = self.image_path.stem
         self.image = get_image(self.image_path)
         self.ext = self.image_path.suffix
@@ -942,25 +942,27 @@ class Zipp3r(object):
         if not blockfolder.exists():
             blockfolder.mkdir(parents=True, exist_ok=True)
 
-        print(blockfolder)
-
         blockinfo_out = Path(blockfolder, "BlockInfo.json")
-
-        print(blockinfo_out)
 
         if not hasattr(self, 'blocks') or not self.blocks:
             raise ValueError("Blocks are not set. Please call set_block_slices first.")
 
         blocks = self.blocks  # Usa el atributo de la instancia
 
+        print("Despues self.blocks")
+        
         with open(blockinfo_out, 'w') as f:
             json.dump(blocks, f, indent=4)
+
+        print("Despues escribir json")
 
         for block in blocks:
             block_slice = self.create_slice_object(slice_list=block["block_with_margins"])
             block_img = self.image
             block_img = self.image[block_slice]
             save_image(block_img, path=block["BlockPath"])
+
+        print("Despues iteracion")
 
     def create_slice_object(
         self,
