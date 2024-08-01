@@ -1,9 +1,16 @@
 import numpy as np
+import sys
+
+# sys.path.append('/app/data/Zipping-pruebas')
 from general_segmentation_functions.image_handling import view_napari, get_image, save_image
 from general_segmentation_functions.image_processing import insert_array,draw_ellipsoid,trim_zeros
 from scipy.ndimage import distance_transform_edt
 from pathlib import Path
 import random
+
+for path in sys.path:
+    print(path)
+
 
 def create_ordered_test():
     img_shape = [60,2000,2000]
@@ -89,7 +96,11 @@ def create_round_segments(shape, min_diameter, max_diameter, element_sizes):
     return array
 
 # Define the shape of the 3D array
+<<<<<<< HEAD
 shape = (20, 1000, 1000)
+=======
+shape = (60, 2000, 2000)
+>>>>>>> b10a6dd17b5e7a0eede49cd67244c2566b78917e
 
 # Define the minimum and maximum diameter of the round segments
 min_diameter = 40
@@ -100,7 +111,11 @@ element_sizes = (4, 1, 1)
 
 # Create the 3D numpy array with round segments
 result_array = create_round_segments(shape, min_diameter, max_diameter, element_sizes)
+<<<<<<< HEAD
 save_image(result_array, path="D:/Escritorio/test_image_big.tiff")
+=======
+save_image(result_array, path="C:/Users/malieva/Desktop/test_image_big_desktop.tiff")
+>>>>>>> b10a6dd17b5e7a0eede49cd67244c2566b78917e
 
 # Display the shape of the resulting array
 print("Shape of the array:", result_array.shape)
