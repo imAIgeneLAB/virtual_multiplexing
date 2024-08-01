@@ -89,7 +89,7 @@ def create_round_segments(shape, min_diameter, max_diameter, element_sizes):
     return array
 
 # Define the shape of the 3D array
-shape = (120, 4000, 4000)
+shape = (20, 1000, 1000)
 
 # Define the minimum and maximum diameter of the round segments
 min_diameter = 40
@@ -100,7 +100,7 @@ element_sizes = (4, 1, 1)
 
 # Create the 3D numpy array with round segments
 result_array = create_round_segments(shape, min_diameter, max_diameter, element_sizes)
-save_image(result_array, path="/Users/malieva/Desktop/test_image_big.tiff")
+save_image(result_array, path="D:/Escritorio/test_image_big.tiff")
 
 # Display the shape of the resulting array
 print("Shape of the array:", result_array.shape)
