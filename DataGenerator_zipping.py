@@ -386,14 +386,6 @@ def process_multiple_channels(lif_path, series_list, channel_list, num_frames, r
     
     return tiff_paths
 
-
-def read_tiff_plane(filepath, channel, plane):
-    with TiffFile(filepath) as tif:
-        # Asumimos que la imagen TIFF es un stack 3D con un canal específico
-        image = tif.pages[plane].asarray()
-        return image
-
-
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #MAIN function automating the patch extraction process
@@ -587,9 +579,9 @@ def main_DataGenerator(filepath, role, percentile,patchsize,channels,ch1,ch2,ch3
                         dstack.append(data)
                 
                 elif filepath.endswith('.tiff'):
-                    # Lee el archivo TIFF
-                    for m in range(l_layer, u_layer):
-                        data = read_tiff_plane(filepath, i, m)
+                    with TiffFile(filepath) as tif:
+                        print(f'Iteracion {j} de {u_layer}')
+                        data = tif.pages[j].asarray()
                         dstack.append(data)
                 
                 # Si no es .lif ejecuta read_tiled_plane tal cual desde STAPL-3D

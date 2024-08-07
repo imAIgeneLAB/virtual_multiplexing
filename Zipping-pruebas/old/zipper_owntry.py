@@ -74,7 +74,7 @@ class Zipp3r(object):
         with open(seginfo_out, 'w') as f:
             json.dump(blocks, f, indent=4)
             
-    def set_zip_blocks():
+    def set_zip_blocks(self):
         ### Set zipblock combination
         ### Per dimension there will be two sets, go over final grid with stride 2 from index 0 and index 1
         ### Resegment the border/seam of these two blocks, then recalculate the border segments
@@ -82,6 +82,12 @@ class Zipp3r(object):
         lines=None
         quads=None
         octs=None
+
+        if not hasattr(self, 'nr_blocks') or not self.nr_blocks:
+            raise ValueError("Blocks are not set. Please call set_block_slices first.")
+
+        nr_blocks = self.nr_blocks  # Usa el atributo de la instancia
+        blocks = self.blocks
         
         #Lines
         lines = {idx: {"linetype1":[], "linetype2":[]} for idx, _ in enumerate(nr_blocks)}
@@ -95,7 +101,7 @@ class Zipp3r(object):
                 # Slice out all indices for block1 of the pair
                 # If number of blocks is uneven, dont take the last row of that dimension
                 # as block1, as there is no corresponding pair
-                slices_line1 = create_slice_object(
+                slices_line1 = self.create_slice_object(
                     ndim=len(nr_blocks), 
                     axis=idx, 
                     start=None, 
@@ -105,7 +111,7 @@ class Zipp3r(object):
                 line1_start_idc = shaped_block_indices[slices_line1].flatten().tolist()
                 line1_pairs = [[blocks[start].copy(), blocks[start+patch_size].copy()] for start in line1_start_idc]
 
-                slices_line2 = create_slice_object(
+                slices_line2 = self.create_slice_object(
                     ndim=len(nr_blocks), 
                     axis=idx, 
                     start=1, 
@@ -150,7 +156,7 @@ class Zipp3r(object):
                 slice_list = [[x,x+1] for x in coord]
                 for idx in axis:
                     slice_list[idx][1]+=1
-                slice_obj = create_slice_object(
+                slice_obj = self.create_slice_object(
                     slice_list=slice_list,
                     step=1
                 )
@@ -430,14 +436,14 @@ class Zipp3r(object):
         block1_list[dim] = [block1_list[dim][1], block1_info["block_shape"][dim]]
         # block1_list[dim] = [block1_list[dim][1], block1_info["block_with_margins"][dim][1]]
         # Slice this part and get all unique segment IDs that touch that specific block border
-        block1_slices = create_slice_object(block1_list)
+        block1_slices = self.create_slice_object(block1_list)
         block1_segment_ids = [int(x) for x in np.unique(block1_img[block1_slices][block1_img[block1_slices]!=0])]
         
         block2_list = block2_info["relative_block"].copy()
         # Get only the part of the block where segments touch that border of the block
         block2_list[dim] = [0, block2_list[dim][0]]
         # Slice this part and get all unique segment IDs that touch that specific block border
-        block2_slices = create_slice_object(block2_list)
+        block2_slices = self.create_slice_object(block2_list)
         block2_segment_ids = [int(x) for x in np.unique(block2_img[block2_slices][block2_img[block2_slices]!=0])]
                 
         ### If there are no border segments, return the original segment images
@@ -468,7 +474,7 @@ class Zipp3r(object):
                 block1_list[dim][0]
                 ]
 
-            line1_block_slice_margin = create_slice_object(
+            line1_block_slice_margin = self.create_slice_object(
                 ndim=block1_img.ndim, 
                 axis=dim, 
                 start = block1_furthest_segment_index-margins[dim],
@@ -490,7 +496,7 @@ class Zipp3r(object):
                 block2_furthest_segment_index+margins[dim]
                 ]
             
-            line2_block_slice_margin = create_slice_object(
+            line2_block_slice_margin = self.create_slice_object(
                 ndim=block2_img.ndim, 
                 axis=dim, 
                 start = block2_list[dim][1],
@@ -537,7 +543,7 @@ class Zipp3r(object):
         block1_list[dims[0]] = [block1_list[dims[0]][1], block1_info["block_shape"][dims[0]]]
         block1_list[dims[1]] = [block1_list[dims[1]][1], block1_info["block_shape"][dims[1]]]
         # Slice this part and get all unique segment IDs that touch that specific block border
-        block1_slices = create_slice_object(block1_list)
+        block1_slices = self.create_slice_object(block1_list)
         block1_segment_ids = [int(x) for x in np.unique(block1_img[block1_slices][block1_img[block1_slices]!=0])]
         
         block2_list = block2_info["relative_block"].copy()
@@ -545,7 +551,7 @@ class Zipp3r(object):
         block2_list[dims[0]] = [0, block2_list[dims[0]][0]]
         block2_list[dims[1]] = [block2_list[dims[1]][1], block2_info["block_shape"][dims[1]]]
         # Slice this part and get all unique segment IDs that touch that specific block border
-        block2_slices = create_slice_object(slice_list=block2_list)
+        block2_slices = self.create_slice_object(slice_list=block2_list)
         block2_segment_ids = [int(x) for x in np.unique(block2_img[block2_slices][block2_img[block2_slices]!=0])]
         
         block3_list = block3_info["relative_block"].copy()
@@ -553,7 +559,7 @@ class Zipp3r(object):
         block3_list[dims[0]] = [block3_list[dims[0]][1], block3_info["block_shape"][dims[0]]]
         block3_list[dims[1]] = [0, block3_list[dims[1]][0]]
         # Slice this part and get all unique segment IDs that touch that specific block border
-        block3_slices = create_slice_object(block3_list)
+        block3_slices = self.create_slice_object(block3_list)
         block3_segment_ids = [int(x) for x in np.unique(block3_img[block3_slices][block3_img[block3_slices]!=0])]
         
         block4_list = block4_info["relative_block"].copy()
@@ -561,7 +567,7 @@ class Zipp3r(object):
         block4_list[dims[0]] = [0, block4_list[dims[0]][0]]
         block4_list[dims[1]] = [0, block4_list[dims[1]][0]]
         # Slice this part and get all unique segment IDs that touch that specific block border
-        block4_slices = create_slice_object(block4_list)
+        block4_slices = self.create_slice_object(block4_list)
         block4_segment_ids = [int(x) for x in np.unique(block4_img[block4_slices][block4_img[block4_slices]!=0])]
         
                 
@@ -719,10 +725,10 @@ class Zipp3r(object):
             quad4_block_slice_margins[dims[0]]=quadpart4_with_margin[0]
             quad4_block_slice_margins[dims[1]]=quadpart4_with_margin[1]
             
-            slice_quad1_block_slice_margins = create_slice_object(slice_list=quad1_block_slice_margins)
-            slice_quad2_block_slice_margins = create_slice_object(slice_list=quad2_block_slice_margins)
-            slice_quad3_block_slice_margins = create_slice_object(slice_list=quad3_block_slice_margins)
-            slice_quad4_block_slice_margins = create_slice_object(slice_list=quad4_block_slice_margins)
+            slice_quad1_block_slice_margins = self.create_slice_object(slice_list=quad1_block_slice_margins)
+            slice_quad2_block_slice_margins = self.create_slice_object(slice_list=quad2_block_slice_margins)
+            slice_quad3_block_slice_margins = self.create_slice_object(slice_list=quad3_block_slice_margins)
+            slice_quad4_block_slice_margins = self.create_slice_object(slice_list=quad4_block_slice_margins)
         
         block1_raw_img = get_image(block1_info["BlockPath"])
         block2_raw_img = get_image(block2_info["BlockPath"])
@@ -789,28 +795,28 @@ class Zipp3r(object):
         line_block1_size = zip_info["line_blocksizes"][0]
         line_block2_size = zip_info["line_blocksizes"][1]
         
-        block1_margins = create_slice_object(
+        block1_margins = self.create_slice_object(
                 ndim=block1_img.ndim, 
                 axis=dim, 
                 start = zip_info["block1_margins"][0],
                 end= zip_info["block1_margins"][1]
                 )
 
-        block2_margins = create_slice_object(
+        block2_margins = self.create_slice_object(
                 ndim=block1_img.ndim, 
                 axis=dim, 
                 start = zip_info["block2_margins"][0],
                 end= zip_info["block2_margins"][1]
                 )
         
-        linepart1_slice = create_slice_object(ndim=line_img.ndim, axis = dim, end = line_block1_size+zip_info["margin"])
+        linepart1_slice = self.create_slice_object(ndim=line_img.ndim, axis = dim, end = line_block1_size+zip_info["margin"])
         block1_img[block1_margins] = np.where(
             block1_img[block1_margins]==0, 
             line_img[linepart1_slice],
             block1_img[block1_margins]
             )
         
-        linepart2_slice = create_slice_object(ndim=line_img.ndim, axis = dim, start = -(line_block2_size+zip_info["margin"])) 
+        linepart2_slice = self.create_slice_object(ndim=line_img.ndim, axis = dim, start = -(line_block2_size+zip_info["margin"])) 
         block2_img[block2_margins] = np.where(
             block2_img[block2_margins]==0, 
             line_img[linepart2_slice],
@@ -837,44 +843,44 @@ class Zipp3r(object):
         quad_block3_size = zip_info["quad_blocksizes"][2]
         quad_block4_size = zip_info["quad_blocksizes"][3]
         
-        block1_margins = create_slice_object(
+        block1_margins = self.create_slice_object(
                 slice_list=zip_info["block1_margins"]
                 )
 
-        block2_margins = create_slice_object(
+        block2_margins = self.create_slice_object(
                 slice_list=zip_info["block2_margins"]
                 )
 
-        block3_margins = create_slice_object(
+        block3_margins = self.create_slice_object(
                 slice_list=zip_info["block3_margins"]
                 )
         
-        block4_margins = create_slice_object(
+        block4_margins = self.create_slice_object(
                 slice_list=zip_info["block4_margins"]
                 )
         
-        quadpart1_slice = create_slice_object(slice_list=quad_block1_size)
+        quadpart1_slice = self.create_slice_object(slice_list=quad_block1_size)
         block1_img[block1_margins] = np.where(
             block1_img[block1_margins]==0, 
             quad_img[quadpart1_slice],
             block1_img[block1_margins]
             )
         
-        quadpart2_slice = create_slice_object(slice_list=quad_block2_size) 
+        quadpart2_slice = self.create_slice_object(slice_list=quad_block2_size) 
         block2_img[block2_margins] = np.where(
             block2_img[block2_margins]==0, 
             quad_img[quadpart2_slice],
             block2_img[block2_margins]
             )
 
-        quadpart3_slice = create_slice_object(slice_list=quad_block3_size)
+        quadpart3_slice = self.create_slice_object(slice_list=quad_block3_size)
         block3_img[block3_margins] = np.where(
             block3_img[block3_margins]==0, 
             quad_img[quadpart3_slice],
             block3_img[block3_margins]
             )
         
-        quadpart4_slice = create_slice_object(slice_list=quad_block4_size)
+        quadpart4_slice = self.create_slice_object(slice_list=quad_block4_size)
         block4_img[block4_margins] = np.where(
             block4_img[block4_margins]==0, 
             quad_img[quadpart4_slice],
@@ -1093,6 +1099,7 @@ class Zipp3r(object):
             blocks.append(block_dict)
 
         self.blocks = blocks
+        self.nr_blocks = nr_blocks
 
     # def get_border_segments():
     #     for block in blocks:
