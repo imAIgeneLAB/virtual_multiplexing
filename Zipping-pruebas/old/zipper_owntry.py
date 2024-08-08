@@ -213,7 +213,6 @@ class Zipp3r(object):
             zipped_intermediate_folder.mkdir()
         # Loop through dimension in the image
         for dim in lines.keys():
-            self.dim = dim
             print(f"Dim: {dim}")
             # Loop through the linetypes in the image (1: 1+2, 3+4 and 2: 2+3, 4+5 etc.)
             for linetype in lines[dim].keys():
@@ -245,28 +244,37 @@ class Zipp3r(object):
                     
                     # Resegment the seam of these two blocks and return this seam as an image
                     print(block1_info["BlockID"],block2_info["BlockID"])
+                    prueba = dim
+
+                    outfolder=Path(zipfolder, subzipfolder)
+                    
+                    print(outfolder)
                     print(dim)
-                    print(self.dim)
+                    print(prueba)
+                    
                     block1_removed_seg, block2_removed_seg, resegmented_line, line_info = self.resegment_line(
                         block1_info, 
                         block2_info, 
-                        dim=self.dim,
+                        dim=dim,
                         outfolder=Path(zipfolder, subzipfolder)
-                        )
-
+                    )
+                    print('Paso 1')
                     save_image(block1_removed_seg, path=block1_intermediate_path)
                     save_image(block2_removed_seg, path=block2_intermediate_path)
                     line_info["block1"]=str(block1_intermediate_path)
                     line_info["block2"]=str(block2_intermediate_path)
-                    
+                    print('Paso 2')
                     line_name = f"zipping_dim{dim}_{linetype}_{block1_info['BlockID']}_{block2_info['BlockID']}"+ext
                     line_outpath = str(Path(subzipfolder, line_name))
+                    print('Paso 3')
                     if resegmented_line is not None:
+                        print('Paso 4.1')
                         line_info["line"]=line_outpath
                         line_info["nr_segments"]=len(np.unique(resegmented_line[resegmented_line!=0]))
                         save_image(resegmented_line, path=line_outpath)
                         ziplist+=[line_outpath]
                     else:
+                        print('Paso 4.2')
                         line_info["nr_segments"]=0
                     lines_info.append(line_info)
                 
@@ -430,32 +438,38 @@ class Zipp3r(object):
             segment_max = int(np.max(image))
             save_image(image, path=image_path)
                    
-    def resegment_line(block1_info, block2_info, dim, outfolder)    :
+    def resegment_line(self, block1_info, block2_info, dim, outfolder)    :
         ### Calculate which segment overlap the border of both blocks of the seam pair
         ### Calculate the extent of the segments into both blocks
         ### Create a seam cutout with margin that will be resegmented
-        
+
+        print('Paso 0.1')
         block1_img = get_image(block1_info["BlockPath"])
         block2_img = get_image(block2_info["BlockPath"])
-        
+
+        print('Paso 0.2')
         block1_list = block1_info["relative_block"].copy()
 
+        print('Paso 0.3')
         # Get only the part of the block where segments touch that border of the block
         block1_list[dim] = [block1_list[dim][1], block1_info["block_shape"][dim]]
         # block1_list[dim] = [block1_list[dim][1], block1_info["block_with_margins"][dim][1]]
         # Slice this part and get all unique segment IDs that touch that specific block border
         block1_slices = self.create_slice_object(block1_list)
         block1_segment_ids = [int(x) for x in np.unique(block1_img[block1_slices][block1_img[block1_slices]!=0])]
-        
+
+        print('Paso 0.4')
         block2_list = block2_info["relative_block"].copy()
         # Get only the part of the block where segments touch that border of the block
         block2_list[dim] = [0, block2_list[dim][0]]
         # Slice this part and get all unique segment IDs that touch that specific block border
         block2_slices = self.create_slice_object(block2_list)
         block2_segment_ids = [int(x) for x in np.unique(block2_img[block2_slices][block2_img[block2_slices]!=0])]
-                
+
+        print('Paso 0.5')
         ### If there are no border segments, return the original segment images
         if len(block1_segment_ids)==0 and len(block2_segment_ids)==0:
+            print('Paso 0.5.1')
             zip_info={
             "block1": block1_info["BlockPath"],
             "block2": block2_info["BlockPath"],
@@ -467,21 +481,39 @@ class Zipp3r(object):
             "line_blocksizes":[]
         } 
             return(block1_img, block2_img, None, zip_info)
+
         else:
+            print('Paso 0.5.2')
             if len(block1_segment_ids)>0:
+                print('Paso 0.5.2.1')
+
+                print(f"block1_img dtype: {block1_img.dtype}")
+                print(f"block1_segment_ids dtype: {type(block1_segment_ids)}")
+                print(f"block1_img shape: {block1_img.shape}")
+                print(f"block1_segment_ids shape: {np.shape(block1_segment_ids)}")
+
+                #print(f"block1_segment_ids: {block1_segment_ids}")
+                #print(f"Unique values in block1_img: {np.unique(block1_img)}")
+
+                
                 block1_segments = np.isin(block1_img, block1_segment_ids)
+                print('Paso 0.5.2.1.1')
                 block1_furthest_segment_index = np.min(np.nonzero(np.any(
                     block1_segments, axis=tuple(i for i in range(block1_segments.ndim) if i != dim)
                     )))
+                print('Paso 0.5.2.1.2')
                 block1_img[block1_segments]=0
             else:
+                print('Paso 0.5.2.2')
                 block1_furthest_segment_index = 0
-                
+
+            print('Paso 0.5.2.3')
             linepart1_with_margin = [
                 block1_furthest_segment_index - margins[dim], 
                 block1_list[dim][0]
                 ]
-
+            
+            print('Paso 0.5.2.4')
             line1_block_slice_margin = self.create_slice_object(
                 ndim=block1_img.ndim, 
                 axis=dim, 
@@ -489,28 +521,31 @@ class Zipp3r(object):
                 end=block1_list[dim][0]
                 )
             
-        
+            
             if len(block2_segment_ids)>0:
+                print('Paso 0.5.2.5')
                 block2_segments = np.isin(block2_img, block2_segment_ids)
                 block2_furthest_segment_index=np.max(np.nonzero(np.any(
                     block2_segments, axis=tuple(i for i in range(block2_segments.ndim) if i != dim)
                     )))
                 block2_img[block2_segments]=0
             else:
+                print('Paso 0.5.2.6')
                 block2_furthest_segment_index=0
-            
+            print('Paso 0.5.2.7')
             linepart2_with_margin = [
                 block2_list[dim][1], 
                 block2_furthest_segment_index+margins[dim]
                 ]
-            
+            print('Paso 0.5.2.8')
             line2_block_slice_margin = self.create_slice_object(
                 ndim=block2_img.ndim, 
                 axis=dim, 
                 start = block2_list[dim][1],
                 end=block2_furthest_segment_index+margins[dim]
                 )
-
+        
+        print('Paso 0.6')
         block1_raw_img = get_image(block1_info["BlockPath"])
         block2_raw_img = get_image(block2_info["BlockPath"])
         line = np.concatenate([block1_raw_img[line1_block_slice_margin], block2_raw_img[line2_block_slice_margin]], axis=dim)
@@ -963,20 +998,14 @@ class Zipp3r(object):
 
         blocks = self.blocks  # Usa el atributo de la instancia
 
-        print("Despues self.blocks")
-        
         with open(blockinfo_out, 'w') as f:
             json.dump(blocks, f, indent=4)
-
-        print("Despues escribir json")
 
         for block in blocks:
             block_slice = self.create_slice_object(slice_list=block["block_with_margins"])
             block_img = self.image
             block_img = self.image[block_slice]
             save_image(block_img, path=block["BlockPath"])
-
-        print("Despues iteracion")
 
     def create_slice_object(
         self,
