@@ -48,19 +48,19 @@ RUN pip install --no-cache-dir \
     torchvision \
     visdom \
     wandb
- 
+
 # Descargar Fiji desde el enlace proporcionado usando curl
-RUN mkdir -p /app/fiji_linux && \
-    curl -L -o /tmp/fiji_linux.zip https://downloads.imagej.net/fiji/latest/fiji-linux64.zip && \
-    unzip -q /tmp/fiji_linux.zip -d /app/fiji_linux && \
-    rm /tmp/fiji_linux.zip
+# RUN mkdir -p /app/fiji_linux && \
+#    curl -L -o /tmp/fiji_linux.zip https://downloads.imagej.net/fiji/latest/fiji-linux64.zip && \
+#    unzip -q /tmp/fiji_linux.zip -d /app/fiji_linux && \
+#    rm /tmp/fiji_linux.zip
+
 
 # Clona los repositorios necesarios
 RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
     git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix && \
     git clone https://github.com/heeycoen/VirtualMultiplexing3D && \
     git clone https://github.com/josecared/STAPL3D && \
-    git clone https://github.com/NicolasCristini/ImageJ-Processing-Assistant-Notebook && \
     git clone https://github.com/fmi-basel/RDCNet
 
 # Instala los requisitos para pytorch-CycleGAN-and-pix2pix
@@ -74,13 +74,13 @@ RUN mkdir -p \
     /app/Pruebas/models \
     /app/Pruebas/traintest \
     /app/Pruebas/preds \
-    /app/Pruebas/unmix
+    /app/Pruebas/unmix 
 
 # Toma la ruta /app/VirtualMultiplexing3D para ejecutar módulos personalizados
 ENV PYTHONPATH /app/VirtualMultiplexing3D
-ENV FIJI_PATH /fiji/ImageJ-linux64
-ENV JAVA_HOME /usr/lib/jvm/java-17-openjdk-amd64
-ENV PATH $JAVA_HOME/bin:$PATH
+# ENV FIJI_PATH /fiji/ImageJ-linux64
+# ENV JAVA_HOME /usr/lib/jvm/java-17-openjdk-amd64
+# ENV PATH $JAVA_HOME/bin:$PATH
 
 # Copia todos los archivos locales al contenedor en el directorio /app
 COPY . .
