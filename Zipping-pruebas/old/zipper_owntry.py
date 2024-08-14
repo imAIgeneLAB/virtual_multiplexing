@@ -278,8 +278,6 @@ class Zipp3r(object):
                 
                 linelist = [{"nr_segments":line["nr_segments"],"img":line["line"]} for line in lines_info if line["line"] is not None]
 
-                max_segment_id = self.max_segment_id
-                
                 # linelist = [Path(subzipfolder, line) for line in os.listdir(subzipfolder) if ".tiff" in line]
                 if len(linelist) > 0:
                     max_segment_id = self.relabel_unique_segments_all_zipblocks(linelist, max_segment_id)
@@ -794,7 +792,7 @@ class Zipp3r(object):
         
         return(block1_img, block2_img, block3_img, block4_img, quad, zip_info)
         
-    def zip_line(zip_info):
+    def zip_line(self, zip_info):
         
         block1_img=get_image(zip_info["block1"])
         block2_img=get_image(zip_info["block2"])
@@ -803,27 +801,27 @@ class Zipp3r(object):
         line_block1_size = zip_info["line_blocksizes"][0]
         line_block2_size = zip_info["line_blocksizes"][1]
         
-        block1_margins = create_slice_object(
+        block1_margins = self.create_slice_object(
                 ndim=block1_img.ndim, 
                 axis=dim, 
                 start = zip_info["block1_margins"][0],
                 end= zip_info["block1_margins"][1]
                 )
 
-        block2_margins = create_slice_object(
+        block2_margins = self.create_slice_object(
                 ndim=block1_img.ndim, 
                 axis=dim, 
                 start = zip_info["block2_margins"][0],
                 end= zip_info["block2_margins"][1]
                 )
         
-        linepart1_slice = create_slice_object(
+        linepart1_slice = self.create_slice_object(
                 ndim=line_img.ndim,
                 axis = dim,
                 end = line_block1_size+zip_info["margin"]
                 )
 
-
+        print(line_img[linepart1_slice])
         
         block1_img[block1_margins] = np.where(
             block1_img[block1_margins]==0, 
@@ -831,7 +829,7 @@ class Zipp3r(object):
             block1_img[block1_margins]
             )
         
-        linepart2_slice = create_slice_object(ndim=line_img.ndim, axis = dim, start = -(line_block2_size+zip_info["margin"])) 
+        linepart2_slice = self.create_slice_object(ndim=line_img.ndim, axis = dim, start = -(line_block2_size+zip_info["margin"])) 
         block2_img[block2_margins] = np.where(
             block2_img[block2_margins]==0, 
             line_img[linepart2_slice],
@@ -985,6 +983,8 @@ class Zipp3r(object):
             block_img = self.image
             block_img = self.image[block_slice]
             save_image(block_img, path=block["BlockPath"])
+
+        return block_img
 
     def create_slice_object(
         self,
