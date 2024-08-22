@@ -3,7 +3,7 @@ FROM python:3.8-slim
 
 # Instala git, openmpi, gcc, java, maven y otras herramientas necesarias para importar repositorios de git
 RUN apt-get update && \
-    apt-get install -y git build-essential libopenmpi-dev curl unzip default-jre maven && \
+    apt-get install -y git build-essential libopenmpi-dev curl unzip maven && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -16,7 +16,6 @@ RUN pip install --no-cache-dir \
     ashlar \
     czifile \
     elasticdeform \
-    #git+https://github.com/josecared/STAPL3D.git \
     h5py==2.10.0 \
     ipython \
     ipywidgets \
@@ -49,22 +48,15 @@ RUN pip install --no-cache-dir \
     visdom \
     wandb
 
-# Descargar Fiji desde el enlace proporcionado usando curl
-# RUN mkdir -p /app/fiji_linux && \
-#    curl -L -o /tmp/fiji_linux.zip https://downloads.imagej.net/fiji/latest/fiji-linux64.zip && \
-#    unzip -q /tmp/fiji_linux.zip -d /app/fiji_linux && \
-#    rm /tmp/fiji_linux.zip
-
-
 # Clona los repositorios necesarios
 RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
     git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix && \
     git clone https://github.com/heeycoen/VirtualMultiplexing3D && \
-    git clone https://github.com/josecared/STAPL3D && \
-    git clone https://github.com/fmi-basel/RDCNet
+    git clone https://github.com/josecared/STAPL3D
 
 # Instala los requisitos para pytorch-CycleGAN-and-pix2pix
 RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt 
+
 # Genera la configuración de Jupyter Notebook
 RUN jupyter notebook --generate-config --allow-root
 
@@ -78,9 +70,6 @@ RUN mkdir -p \
 
 # Toma la ruta /app/VirtualMultiplexing3D para ejecutar módulos personalizados
 ENV PYTHONPATH /app/VirtualMultiplexing3D
-# ENV FIJI_PATH /fiji/ImageJ-linux64
-# ENV JAVA_HOME /usr/lib/jvm/java-17-openjdk-amd64
-# ENV PATH $JAVA_HOME/bin:$PATH
 
 # Copia todos los archivos locales al contenedor en el directorio /app
 COPY . .
@@ -93,10 +82,10 @@ EXPOSE 8097
 CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root & python -m visdom.server -p 8097"]
 
 # Comando para correr docker y que lea los archivoa en D:/Escritorio/data:
-# docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:stitching
-# docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:stitching
-# docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:stitching
-# docker run --gpus all -it -p 8888:8888 -p 8097:8097 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:stitching
+# docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:imp
+# docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:imp
+# docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:imp
+# docker run --gpus all -it -p 8888:8888 -p 8097:8097 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:imp
 
 # Comando para guardar los resultados en el escritorio
 # docker cp vm:/app/pruebas D:/Escritorio
