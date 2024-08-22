@@ -1,16 +1,16 @@
-# Usa una imagen base de Python
+# Use a base image with Python
 FROM python:3.8-slim
 
-# Instala git, openmpi, gcc, java, maven y otras herramientas necesarias para importar repositorios de git
+# Install git, openmpi, gcc, java, maven, and other necessary tools for importing git repositories
 RUN apt-get update && \
     apt-get install -y git build-essential libopenmpi-dev curl unzip maven && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Establece el directorio de trabajo dentro del contenedor
+# Set the working directory inside the container
 WORKDIR /app
 
-# Instala Jupyter Notebook y los paquetes necesarios
+# Install Jupyter Notebook and the required packages
 RUN pip install --no-cache-dir \
     aicspylibczi \
     ashlar \
@@ -42,51 +42,51 @@ RUN pip install --no-cache-dir \
     tensorboard \
     tensorflow-addons \
     tensorflow \
-    tifffile \ 
+    tifffile \
     torch>=0.4.0 \
     torchvision \
     visdom \
     wandb
 
-# Clona los repositorios necesarios
+# Clone necessary repositories
 RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
     git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix && \
     git clone https://github.com/heeycoen/VirtualMultiplexing3D && \
     git clone https://github.com/josecared/STAPL3D
 
-# Instala los requisitos para pytorch-CycleGAN-and-pix2pix
+# Install requirements for pytorch-CycleGAN-and-pix2pix
 RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt 
 
-# Genera la configuración de Jupyter Notebook
+# Generate Jupyter Notebook configuration
 RUN jupyter notebook --generate-config --allow-root
 
-# Creamos carpetas 
+# Create directories
 RUN mkdir -p \
-    /app/Pruebas \
-    /app/Pruebas/models \
-    /app/Pruebas/traintest \
-    /app/Pruebas/preds \
-    /app/Pruebas/unmix 
+    /app/Testing \
+    /app/Testing/models \
+    /app/Testing/traintest \
+    /app/Testing/preds \
+    /app/Testing/unmix 
 
-# Toma la ruta /app/VirtualMultiplexing3D para ejecutar módulos personalizados
+# Set the PYTHONPATH environment variable to include the VirtualMultiplexing3D directory
 ENV PYTHONPATH /app/VirtualMultiplexing3D
 
-# Copia todos los archivos locales al contenedor en el directorio /app
+# Copy all local files to the /app directory in the container
 COPY . .
 
-# Expone el puerto 8888 para Jupyter Notebook y el 8097 para visdom 
+# Expose port 8888 for Jupyter Notebook and port 8097 for visdom
 EXPOSE 8888
 EXPOSE 8097
 
-# Comando por defecto para ejecutar Jupyter Notebook al iniciar el contenedor
+# Default command to run Jupyter Notebook and visdom server when the container starts
 CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root & python -m visdom.server -p 8097"]
 
-# Comando para correr docker y que lea los archivoa en D:/Escritorio/data:
-# docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:imp
+# Commands to run the Docker container and mount local directories:
+# docker run -it -p 8888:8888 --name vm -v D:/Desktop/data:/app/data vm:imp
 # docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:imp
 # docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:imp
 # docker run --gpus all -it -p 8888:8888 -p 8097:8097 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:imp
 
-# Comando para guardar los resultados en el escritorio
-# docker cp vm:/app/pruebas D:/Escritorio
+# Commands to copy results from the container to the desktop:
+# docker cp vm:/app/ D:/Desktop
 # docker cp vm:/app/ C:/Users/malieva/Desktop
