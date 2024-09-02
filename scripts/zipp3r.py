@@ -20,6 +20,9 @@ from copy import deepcopy
 from pathlib import Path
 import json 
 from skimage.measure import label
+import tifffile
+import matplotlib.pyplot as plt
+from PIL import Image, ImageOps
 
 sys.path.append('/app/scripts/')
 from image_handling import get_image,save_image,view_napari
@@ -106,7 +109,7 @@ class Zipp3r(object):
                 line1_pairs = [[blocks[start].copy(), blocks[start+patch_size].copy()] for start in line1_start_idc]
 
                 slices_line2 = create_slice_object(
-                    ndim=len(nr_blocks), 
+                    ndim=len(nr_blocksset_block_slices), 
                     axis=idx, 
                     start=1, 
                     end=dim_nr-dim_nr%2-1,
@@ -115,7 +118,7 @@ class Zipp3r(object):
                 line2_start_idc = shaped_block_indices[slices_line2].flatten().tolist()
                 line2_pairs = [[blocks[start], blocks[start+patch_size]] for start in line2_start_idc]
                 
-                lines[idx]["linetype1"]=line1_pairs
+                lines[idx]["linetype1"]=line1_pairsset_block_slices
                 lines[idx]["linetype2"]=line2_pairs
 
         # Quads
@@ -937,26 +940,22 @@ class Zipp3r(object):
                 max_zipping_segment_id = np.max(seg_img)
         return(max_zipping_segment_id)
       
-    def split_image(self):
-        blockfolder = Path(self.image_folder, "blocks")
-        if not blockfolder.exists():
-            blockfolder.mkdir(parents=True, exist_ok=True)
+    def create_slice_object(
+        self,
+        slice_list=None,
+        ndim=None,
+        axis=None,
+        start=None,
+        end=None,
+        step=1
+    ):
+        if slice_list is not None:
+            slices = [slice(dim_slice[0], dim_slice[1]) if dim_slice is not None else slice(None) for dim_slice in slice_list]
+            slices = tuple(slices)
+        else:
+            slices = (slice(None),) * (axis % ndim) + (slice(start, end, step),)
 
-        blockinfo_out = Path(blockfolder, "BlockInfo.json")
-
-        if not hasattr(self, 'blocks') or not self.blocks:
-            raise ValueError("Blocks are not set. Please call set_block_slices first.")
-
-        blocks = self.blocks  # Usa el atributo de la instancia
-
-        with open(blockinfo_out, 'w') as f:
-            json.dump(blocks, f, indent=4)
-
-        for block in blocks:
-            block_slice = self.create_slice_object(slice_list=block["block_with_margins"])
-            block_img = self.image
-            block_img = self.image[block_slice]
-            save_image(block_img, path=block["BlockPath"])
+        return slices
 
     def create_slice_object(
         self,
@@ -974,6 +973,89 @@ class Zipp3r(object):
             slices = (slice(None),) * (axis % ndim) + (slice(start, end, step),)
 
         return slices
+
+    def split_image(self):
+        blockfolder = Path(self.image_folder, "blocks")
+        if not blockfolder.exists():
+            blockfolder.mkdir(parents=True, exist_ok=True)
+
+        blockinfo_out = Path(blockfolder, "BlockInfo.json")
+
+        if not hasattr(self, 'blocks') or not self.blocks:
+            raise ValueError("Blocks are not set. Please call set_block_slices first.")
+
+        blocks = self.blocks  # Usa el atributo de la instancia
+
+        with open(blockinfo_out, 'w') as f:
+            json.dump(blocks, f, indent=4)
+
+        for block in blocks:
+            block_slice = self.create_slice_object(slice_list=block["block_with_margins"])
+            block_img = self.image[block_slice]
+
+            # Asegúrate de que los valores están en el rango de 16 bits
+            block_img = np.clip(block_img, 0, 65535).astype(np.uint16)
+
+            # Normalización opcional (para asegurar valores dentro del rango)
+            block_img = self.normalize_image(block_img)
+
+            # Troubleshooting
+            print(f"Block: {block['BlockName']}")
+            print(f"Shape: {block_img.shape}")
+            print(f"Min pixel value: {block_img.min()}, Max pixel value: {block_img.max()}")
+
+            # Guardar imagen 3D usando tifffile
+            self.save_image(block_img, path=block["BlockPath"])
+
+            # Leer la imagen guardada para verificar el contenido
+            self.check_image_properties(block["BlockPath"])
+
+            # Visualiza una capa 2D específica
+            if block_img.ndim == 3 and block_img.shape[0] > 0:
+                self.visualize_block(block_img, slice_index=50)  # Cambia el índice si es necesario
+
+    def save_image(self, image_array, path):
+        try:
+            image_3d_normalized = np.clip(image_array * 65535, 0, 65535).astype(np.uint16)
+            # Guarda la imagen 3D en formato TIFF
+            tifffile.imsave(path, image_3d_normalized)
+            
+            print(f"Imagen guardada en {path}")
+        except Exception as e:
+            print(f"Error al guardar la imagen: {e}")
+
+    def check_image_properties(self, path):
+        try:
+            image = tifffile.imread(path)
+            print(f"Image from {path} - Min pixel value: {image.min()}, Max pixel value: {image.max()}")
+            # Visualiza una capa para verificar
+            if image.ndim == 3 and image.shape[0] > 0:
+                plt.imshow(image[50], cmap='gray', vmin=0, vmax=65535)
+                plt.colorbar()
+                plt.title(f'Image from {path} Slice 50')
+                plt.show()
+        except Exception as e:
+            print(f"Error al cargar la imagen: {e}")
+
+    def visualize_block(self, block_img, slice_index):
+        """Visualizar una capa 2D específica de una imagen 3D."""
+        if slice_index < 0 or slice_index >= block_img.shape[0]:
+            raise ValueError("Índice de slice fuera del rango de la imagen.")
+        
+        single_slice = block_img[slice_index, :, :]
+        
+        # Visualizar la capa 2D
+        plt.figure(figsize=(10, 10))
+        plt.imshow(single_slice, cmap='gray', vmin=0, vmax=65535)
+        plt.colorbar()
+        plt.title(f'Slice {slice_index}')
+        plt.show()
+
+    def normalize_image(self, image_array):
+        """Normalizar la imagen para asegurar que los valores estén en el rango [0, 65535]."""
+        if image_array.max() > 0:
+            image_array = (image_array - image_array.min()) / (image_array.max() - image_array.min()) * 65535
+        return image_array.astype(np.uint16)
     
     def slice_axis(array, axis, start=None, end=None, step=1):
         return array[(slice(None),) * (axis % array.ndim) + (slice(start, end, step),)]
