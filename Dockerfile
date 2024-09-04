@@ -67,6 +67,7 @@ RUN mkdir -p \
     /app/Testing/traintest \
     /app/Testing/preds \
     /app/Testing/tiling \
+    /app/Testing/stitching \
     /app/Testing/unmix 
 
 # Toma la ruta /app/VirtualMultiplexing3D para ejecutar módulos personalizados

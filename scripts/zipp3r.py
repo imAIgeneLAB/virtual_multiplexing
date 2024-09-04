@@ -1016,9 +1016,7 @@ class Zipp3r(object):
 
     def save_image(self, image_array, path):
         try:
-            image_3d_normalized = np.clip(image_array * 65535, 0, 65535).astype(np.uint16)
-            # Guarda la imagen 3D en formato TIFF
-            tifffile.imsave(path, image_3d_normalized)
+            tifffile.imsave(path, image_array)
             
             print(f"Imagen guardada en {path}")
         except Exception as e:
