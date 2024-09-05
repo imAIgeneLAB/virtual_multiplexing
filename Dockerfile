@@ -1,16 +1,16 @@
-# Usa una imagen base de Python
+# Python base image
 FROM python:3.8-slim
 
-# Instala git, openmpi, gcc, java, maven y otras herramientas necesarias para importar repositorios de git
+# Git, openmpi, gcc, java, maven & more tools
 RUN apt-get update && \
     apt-get install -y git build-essential libopenmpi-dev curl unzip maven && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Establece el directorio de trabajo dentro del contenedor
+# Working directory
 WORKDIR /app
 
-# Instala Jupyter Notebook y los paquetes necesarios
+# Jupyter Notebook & packages
 RUN pip install --no-cache-dir \
     aicspylibczi \
     ashlar \
@@ -48,19 +48,19 @@ RUN pip install --no-cache-dir \
     visdom \
     wandb
 
-# Clona los repositorios necesarios
+# Git cloning
 RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
     git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix && \
     git clone https://github.com/heeycoen/VirtualMultiplexing3D && \
     git clone https://github.com/josecared/STAPL3D
 
-# Instala los requisitos para pytorch-CycleGAN-and-pix2pix
+# pytorch-CycleGAN-and-pix2pix requirements
 RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt 
 
-# Genera la configuración de Jupyter Notebook
+# Jupyter Notebook config
 RUN jupyter notebook --generate-config --allow-root
 
-# Creamos carpetas 
+# Directories creation 
 RUN mkdir -p \
     /app/Testing \
     /app/Testing/models \
@@ -73,14 +73,14 @@ RUN mkdir -p \
 # Toma la ruta /app/VirtualMultiplexing3D para ejecutar módulos personalizados
 ENV PYTHONPATH /app/VirtualMultiplexing3D
 
-# Copia todos los archivos locales al contenedor en el directorio /app
+# Copy local files to /app
 COPY . .
 
-# Expone el puerto 8888 para Jupyter Notebook y el 8097 para visdom 
+# Open 8888 port for Jupyter Notebook and 8097 for visdom 
 EXPOSE 8888
 EXPOSE 8097
 
-# Comando por defecto para ejecutar Jupyter Notebook al iniciar el contenedor
+# Execute Jupyter Notebook
 CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root & python -m visdom.server -p 8097"]
 
 # Comando para correr docker y que lea los archivoa en D:/Escritorio/data:
