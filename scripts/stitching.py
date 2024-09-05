@@ -16,12 +16,11 @@ class Stitching:
         self.overlap_x = overlap_x
         self.overlap_y = overlap_y
         self.tile_dict = {}
-        print(f"Initialized Stitching with directory: {directory}, overlap_x: {overlap_x}, overlap_y: {overlap_y}")
+        print(f"Initialized Stitching")
 
     @staticmethod
     def load_png(file_path):
         """Loads a PNG file as a numpy array."""
-        print(f"Loading PNG file: {file_path}")
         with Image.open(file_path) as img:
             return np.array(img)
 
@@ -104,26 +103,24 @@ class Stitching:
         print("Stitching completed.")
         return final_image
 
-    def process_directory(self):
+    def process_directory(self, directory):
         """Reads all PNG files in the directory and performs the stitching."""
-        print(f"Processing directory: {self.directory}")
-        for filename in os.listdir(self.directory):
+        print(f"Processing directory: {directory}")
+        for filename in os.listdir(directory):
             if filename.endswith(".png"):
                 try:
                     x, y, z = self.parse_filename(filename)
-                    file_path = os.path.join(self.directory, filename)
+                    file_path = os.path.join(directory, filename)
                     tile = self.load_png(file_path)
 
                     if z not in self.tile_dict:
                         self.tile_dict[z] = []
                     self.tile_dict[z].append((x, y, tile))
-                    print(f"Added tile: X={x}, Y={y}, Z={z}")
                 except ValueError as e:
                     print(e)
 
         for z in self.tile_dict:
             self.tile_dict[z] = sorted(self.tile_dict[z], key=lambda item: (item[0], item[1]))
-            print(f"Tiles for Z={z} sorted.")
 
         z_levels = sorted(self.tile_dict.keys())
         stitched_tiles = []
