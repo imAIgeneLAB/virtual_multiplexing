@@ -84,10 +84,10 @@ EXPOSE 8097
 CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root & python -m visdom.server -p 8097"]
 
 # Comando para correr docker y que lea los archivoa en D:/Escritorio/data:
-# docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:imp
-# docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:imp
-# docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:imp
-# docker run --gpus all -it -p 8888:8888 -p 8097:8097 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:imp
+# docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:doc
+# docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:doc
+# docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:doc
+# docker run --gpus all -it -p 8888:8888 -p 8097:8097 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:doc
 
 # Comando para guardar los resultados en el escritorio
 # docker cp vm:/app/ D:/Escritorio
