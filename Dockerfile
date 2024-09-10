@@ -48,6 +48,15 @@ RUN pip install --no-cache-dir \
     visdom \
     wandb
 
+# Morphometric analysis
+RUN pip install --no-cache-dir \
+    numpy==1.22 \
+    h5py==3.1.0 \
+    flameplot \
+    umap-learn \
+    d3blocks \
+    plotly
+
 # Git cloning
 RUN git clone https://github.com/josecared/ZeroCode-VirtualMultiplexing && \
     git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix && \
@@ -84,10 +93,10 @@ EXPOSE 8097
 CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root & python -m visdom.server -p 8097"]
 
 # Comando para correr docker y que lea los archivoa en D:/Escritorio/data:
-# docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:doc
-# docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:doc
-# docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:doc
-# docker run --gpus all -it -p 8888:8888 -p 8097:8097 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:doc
+# docker run -it -p 8888:8888 --name vm -v D:/Escritorio/data:/app/data vm:morph
+# docker run -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:morph
+# docker run --gpus all -it -p 8888:8888 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:morph
+# docker run --gpus all -it -p 8888:8888 -p 8097:8097 --name vm -v C:/Users/malieva/Desktop/data:/app/data vm:morph
 
 # Comando para guardar los resultados en el escritorio
 # docker cp vm:/app/ D:/Escritorio
