@@ -11,7 +11,7 @@ Pipeline_Pipeline	"CellProfiler Pipeline: http://www.cellprofiler.org
 Version:5
 DateRevision:427
 GitHash:
-ModuleCount:32
+ModuleCount:31
 HasImagePlaneDetails:False
 
 Images:[module_num:1|svn_version:'Unknown'|variable_revision_number:2|show_window:False|notes:['To begin creating your project, use the Images module to compile a list of files and/or folders that you want to analyze. You can also specify a set of rules to include only the desired files in your selected folders.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
@@ -74,7 +74,7 @@ Groups:[module_num:4|svn_version:'Unknown'|variable_revision_number:2|show_windo
     grouping metadata count:1
     Metadata category:None
 
-Threshold:[module_num:5|svn_version:'Unknown'|variable_revision_number:12|show_window:False|notes:['Thresholding and smoothing the nuclei channel prior to segmentation.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
+Threshold:[module_num:5|svn_version:'Unknown'|variable_revision_number:12|show_window:False|notes:['Thresholding and smoothing the nuclei channel prior to segmentation.']|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the input image:raw_red
     Name the output image:nuclei
     Threshold strategy:Global
@@ -193,7 +193,7 @@ Watershed:[module_num:13|svn_version:'Unknown'|variable_revision_number:3|show_w
     Name the output object:segmented_cytoplasm
     Use advanced settings?:Yes
     Generate from:Distance
-    Markers:None
+    Markers:nuclei_holes
     Mask:Leave blank
     Connectivity:1
     Compactness:0.0
@@ -203,18 +203,18 @@ Watershed:[module_num:13|svn_version:'Unknown'|variable_revision_number:3|show_w
     Declump method:Shape
     Reference Image:None
     Segmentation distance transform smoothing factor:1.0
-    Minimum distance between seeds:1
+    Minimum distance between seeds:15
     Minimum absolute internal distance:0.0
     Pixels from border to exclude:0
     Maximum number of seeds:-1
-    Structuring element for seed dilation:Ball,1
+    Structuring element for seed dilation:ball,2
 
-MeasureObjectSizeShape:[module_num:14|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+MeasureObjectSizeShape:[module_num:14|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
     Select object sets to measure:object_membrane, segmented_cytoplasm, watershed_nuclei
     Calculate the Zernike features?:No
     Calculate the advanced features?:No
 
-FilterObjects:[module_num:15|svn_version:'Unknown'|variable_revision_number:10|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+FilterObjects:[module_num:15|svn_version:'Unknown'|variable_revision_number:10|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
     Select the objects to filter:segmented_cytoplasm
     Name the output objects:filtered_segmented_cytoplasm
     Select the filtering mode:Measurements
@@ -236,16 +236,11 @@ FilterObjects:[module_num:15|svn_version:'Unknown'|variable_revision_number:10|s
     Allow fuzzy feature matching?:No
 
 MeasureObjectSizeShape:[module_num:16|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select object sets to measure:filtered_segmented_cytoplasm, object_membrane, segmented_cytoplasm, watershed_nuclei
+    Select object sets to measure:filtered_segmented_cytoplasm
     Calculate the Zernike features?:No
     Calculate the advanced features?:No
 
-MeasureObjectSizeShape:[module_num:17|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
-    Select object sets to measure:filtered_segmented_cytoplasm, object_membrane, segmented_cytoplasm, watershed_nuclei
-    Calculate the Zernike features?:No
-    Calculate the advanced features?:No
-
-RelateObjects:[module_num:18|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+RelateObjects:[module_num:17|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
     Parent objects:watershed_nuclei
     Child objects:filtered_segmented_cytoplasm
     Calculate child-parent distances?:None
@@ -255,7 +250,7 @@ RelateObjects:[module_num:18|svn_version:'Unknown'|variable_revision_number:5|sh
     Name the output object:RelateObjects
     Parent name:None
 
-OverlayOutlines:[module_num:19|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+OverlayOutlines:[module_num:18|svn_version:'Unknown'|variable_revision_number:4|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Display outlines on a blank image?:No
     Select image on which to display outlines:raw_gray
     Name the output image:borders
@@ -265,31 +260,31 @@ OverlayOutlines:[module_num:19|svn_version:'Unknown'|variable_revision_number:4|
     Select outline color:#0613FF
     Select objects to display:watershed_nuclei
 
-OverlayObjects:[module_num:20|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+OverlayObjects:[module_num:19|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Input:raw_gray
     Name the output image:filler
     Objects:watershed_nuclei
     Opacity:0.5
 
-OverlayObjects:[module_num:21|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+OverlayObjects:[module_num:20|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Input:raw_gray
     Name the output image:membrane_img
     Objects:object_membrane
     Opacity:0.5
 
-OverlayObjects:[module_num:22|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+OverlayObjects:[module_num:21|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Input:membrane_img
     Name the output image:membrane_nuclei_img
     Objects:watershed_nuclei
     Opacity:0.5
 
-OverlayObjects:[module_num:23|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+OverlayObjects:[module_num:22|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Input:membrane_img
     Name the output image:membrane_cyto_img
     Objects:filtered_segmented_cytoplasm
     Opacity:0.5
 
-SaveImages:[module_num:24|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+SaveImages:[module_num:23|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the type of image to save:Image
     Select the image to save:raw_gray
     Select method for constructing file names:From image filename
@@ -309,7 +304,7 @@ SaveImages:[module_num:24|svn_version:'Unknown'|variable_revision_number:16|show
     How to save the series:T (Time)
     Save with lossless compression?:Yes
 
-SaveImages:[module_num:25|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+SaveImages:[module_num:24|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the type of image to save:Image
     Select the image to save:raw_red
     Select method for constructing file names:From image filename
@@ -329,7 +324,7 @@ SaveImages:[module_num:25|svn_version:'Unknown'|variable_revision_number:16|show
     How to save the series:T (Time)
     Save with lossless compression?:Yes
 
-SaveImages:[module_num:26|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+SaveImages:[module_num:25|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the type of image to save:Image
     Select the image to save:raw_green
     Select method for constructing file names:From image filename
@@ -349,7 +344,7 @@ SaveImages:[module_num:26|svn_version:'Unknown'|variable_revision_number:16|show
     How to save the series:T (Time)
     Save with lossless compression?:Yes
 
-SaveImages:[module_num:27|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+SaveImages:[module_num:26|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the type of image to save:Image
     Select the image to save:borders
     Select method for constructing file names:From image filename
@@ -369,7 +364,7 @@ SaveImages:[module_num:27|svn_version:'Unknown'|variable_revision_number:16|show
     How to save the series:T (Time)
     Save with lossless compression?:Yes
 
-SaveImages:[module_num:28|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+SaveImages:[module_num:27|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the type of image to save:Image
     Select the image to save:filler
     Select method for constructing file names:From image filename
@@ -389,7 +384,7 @@ SaveImages:[module_num:28|svn_version:'Unknown'|variable_revision_number:16|show
     How to save the series:T (Time)
     Save with lossless compression?:Yes
 
-SaveImages:[module_num:29|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+SaveImages:[module_num:28|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the type of image to save:Image
     Select the image to save:membrane_img
     Select method for constructing file names:From image filename
@@ -409,7 +404,7 @@ SaveImages:[module_num:29|svn_version:'Unknown'|variable_revision_number:16|show
     How to save the series:T (Time)
     Save with lossless compression?:Yes
 
-SaveImages:[module_num:30|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+SaveImages:[module_num:29|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the type of image to save:Image
     Select the image to save:membrane_nuclei_img
     Select method for constructing file names:From image filename
@@ -429,7 +424,7 @@ SaveImages:[module_num:30|svn_version:'Unknown'|variable_revision_number:16|show
     How to save the series:T (Time)
     Save with lossless compression?:Yes
 
-SaveImages:[module_num:31|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+SaveImages:[module_num:30|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the type of image to save:Image
     Select the image to save:membrane_cyto_img
     Select method for constructing file names:From image filename
@@ -449,10 +444,10 @@ SaveImages:[module_num:31|svn_version:'Unknown'|variable_revision_number:16|show
     How to save the series:T (Time)
     Save with lossless compression?:Yes
 
-ExportToSpreadsheet:[module_num:32|svn_version:'Unknown'|variable_revision_number:13|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
+ExportToSpreadsheet:[module_num:31|svn_version:'Unknown'|variable_revision_number:13|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:True]
     Select the column delimiter:Tab
-    Add image metadata columns to your object data file?:Yes
-    Add image file and folder names to your object data file?:Yes
+    Add image metadata columns to your object data file?:No
+    Add image file and folder names to your object data file?:No
     Select the measurements to export:No
     Calculate the per-image mean values for object measurements?:No
     Calculate the per-image median values for object measurements?:No
@@ -473,4 +468,4 @@ ExportToSpreadsheet:[module_num:32|svn_version:'Unknown'|variable_revision_numbe
     File name:DATA.csv
     Use the object name for the file name?:Yes
 "
-Run_Timestamp	2024-09-10T10:48:55.256162
+Run_Timestamp	2024-09-16T13:05:01.731865
