@@ -32,8 +32,9 @@ Más o menos como en el rep de Ana
 
 ### User general workflow
 
+![General workflow](/images/scheme.jpg "")
 
-
+![General workflow](/images/steps.jpg "")
 
 
 
