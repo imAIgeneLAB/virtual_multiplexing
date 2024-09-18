@@ -69,16 +69,6 @@ RUN pip install --no-cache-dir -r pytorch-CycleGAN-and-pix2pix/requirements.txt
 # Jupyter Notebook config
 RUN jupyter notebook --generate-config --allow-root
 
-# Directories creation 
-RUN mkdir -p \
-    /app/Testing \
-    /app/Testing/models \
-    /app/Testing/traintest \
-    /app/Testing/preds \
-    /app/Testing/tiling \
-    /app/Testing/stitching \
-    /app/Testing/unmix 
-
 # Toma la ruta /app/VirtualMultiplexing3D para ejecutar módulos personalizados
 ENV PYTHONPATH /app/VirtualMultiplexing3D
 

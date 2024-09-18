@@ -999,11 +999,6 @@ class Zipp3r(object):
             # Normalización opcional (para asegurar valores dentro del rango)
             block_img = self.normalize_image(block_img)
 
-            # Troubleshooting
-            print(f"Block: {block['BlockName']}")
-            print(f"Shape: {block_img.shape}")
-            print(f"Min pixel value: {block_img.min()}, Max pixel value: {block_img.max()}")
-
             # Guardar imagen 3D usando tifffile
             self.save_image(block_img, path=block["BlockPath"])
 
@@ -1018,20 +1013,13 @@ class Zipp3r(object):
         try:
             tifffile.imsave(path, image_array)
             
-            print(f"Imagen guardada en {path}")
         except Exception as e:
             print(f"Error al guardar la imagen: {e}")
 
     def check_image_properties(self, path):
         try:
             image = tifffile.imread(path)
-            print(f"Image from {path} - Min pixel value: {image.min()}, Max pixel value: {image.max()}")
             # Visualiza una capa para verificar
-            if image.ndim == 3 and image.shape[0] > 0:
-                plt.imshow(image[50], cmap='gray', vmin=0, vmax=65535)
-                plt.colorbar()
-                plt.title(f'Image from {path} Slice 50')
-                plt.show()
         except Exception as e:
             print(f"Error al cargar la imagen: {e}")
 
@@ -1041,13 +1029,6 @@ class Zipp3r(object):
             raise ValueError("Índice de slice fuera del rango de la imagen.")
         
         single_slice = block_img[slice_index, :, :]
-        
-        # Visualizar la capa 2D
-        plt.figure(figsize=(10, 10))
-        plt.imshow(single_slice, cmap='gray', vmin=0, vmax=65535)
-        plt.colorbar()
-        plt.title(f'Slice {slice_index}')
-        plt.show()
 
     def normalize_image(self, image_array):
         """Normalizar la imagen para asegurar que los valores estén en el rango [0, 65535]."""

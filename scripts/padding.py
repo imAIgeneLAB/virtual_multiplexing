@@ -4,7 +4,7 @@ import tifffile
 import re
 
 class Padding:
-    def __init__(self, directory):
+    def __init__(self, directory, output, name):
         """
         Initialize the Padding class.
 
@@ -12,10 +12,12 @@ class Padding:
         directory (str): The directory where the TIFF files are located and where the padded tiles will be saved.
         """
         self.directory = directory
+        self.output = output
+        self.name = name
         self.tile_dict = {}
         self.max_tile_y = 0
         self.max_tile_x = 0
-        self.padded_directory = os.path.join(directory, "padded_tiles")
+        self.padded_directory = os.path.join(output, name)
         os.makedirs(self.padded_directory, exist_ok=True)
 
     def load_tiff(self, file_path):
@@ -152,6 +154,6 @@ class Padding:
                 padded_tile = self.add_padding(tile, self.max_tile_y, self.max_tile_x, position)
 
                 # Save the padded tile
-                padded_filename = f'_block{z}x{x}x{y}_padded.tif'
+                padded_filename = f'{self.name}_block{z}x{x}x{y}_padded.tif'
                 padded_path = os.path.join(self.padded_directory, padded_filename)
                 tifffile.imwrite(padded_path, padded_tile)

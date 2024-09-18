@@ -103,15 +103,15 @@ class Stitching:
         print("Stitching completed.")
         return final_image
 
-    def process_directory(self, directory):
+    def process_directory(self):
         """Reads all PNG files in the directory and performs the stitching."""
-        print(f"Processing directory: {directory}")
-        for filename in os.listdir(directory):
+        print(f"Processing directory: {self.directory}")
+        for filename in os.listdir(self.directory):
             if filename.endswith(".png"):
                 try:
-                    x, y, z = self.parse_filename(filename)
-                    file_path = os.path.join(directory, filename)
-                    tile = self.load_png(file_path)
+                    x, y, z = self.parse_filename(self.filename)
+                    file_path = os.path.join(self.directory, self.filename)
+                    tile = self.load_png(self.file_path)
 
                     if z not in self.tile_dict:
                         self.tile_dict[z] = []
