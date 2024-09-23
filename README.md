@@ -1,48 +1,72 @@
-# Virtual Multiplexing
+# 🧬 Zero Code Virtual-Multiplexing
 
-This is **ZeroCostDL4mic-Virtual-Multiplexing**, a tool designed to perform multiplexing (“virtual staining“) predictions on cell samples, enabling efficient analysis and interpretation of complex data without requiring advanced knowledge in bioinformatics. It supports various input formats and provides customizable settings for advanced processing.
+Welcome to the **Zero Code Virtual-Multiplexing tool**, designed to perform multiplexing (“virtual staining”) predictions on cell samples. It enables efficient analysis and interpretation of complex data without requiring advanced bioinformatics knowledge. 
 
-This repository continues the work done by Ana Ballesteros (https://github.com/imAIgene-Dream3D/ZeroCode-VirtualMultiplexing).
+- **Easy-to-use**
+- **Supports multiple input formats**
+- **Customizable settings for advanced processing**
 
-## Overview
+## 🔎 Overview
 
-Virtual Multiplexing is a technique with which we are able to separate the biomarkers used in a sample into different channels (signal unmixing). Our approach is based on adversarial neural networks (cGANs) and is easily accesible for everyone, even those without computational expertise. To achieve this, it is implemented in a [Docker](https://docs.docker.com/) image, using [Jupyter](https://jupyterlab.readthedocs.io/en/latest/) notebooks. 
+**Virtual Multiplexing** is a technique used to separate biomarkers in a sample into different channels (signal unmixing). Our approach is based on **adversarial neural networks (cGANs)**, making it easily accessible for users, even those without computational expertise. 
 
-## How to use Virtual Multiplexing
+Key features:
+- Integrated with [**Docker**](https://docs.docker.com/)
+- Available through [**Jupyter notebooks**](https://jupyterlab.readthedocs.io/en/latest/)
+- Perfect for signal unmixing in microscopy files
 
-This tool is adapted in Docker. Docker is a platform for designing and distributing applications in the form of images. A Docker image contains all the programs, packages, files, and code necessary to run our application consistently in any environment, ensuring that the application runs consistently on any computer.
+## ❓ How to use Virtual Multiplexing
+
+This tool is integrated into **Docker**, a platform for designing and distributing applications in the form of images. A Docker image contains all the programs, packages, files, and code necessary to run our application consistently in any environment.
+
+> 💡**Note:** With **Docker** you can ensure that the application runs smoothly on any computer, regardless of its configuration.
 
 ![Docker scheme](/images/docker_scheme.png "https://www.geeksforgeeks.org/what-is-docker-hub/")
 
-With our Docker image for virtual multiplexing, you'll just have to install Docker Desktop, download our image and run it to create the container. This container holds everything you need to do the analysis, without extra installation.
+### Steps:
 
-## What type of data does Virtual Multiplexing work with?
+1. **Install Docker Desktop**.
+2. **Download** our image.
+3. **Run the container** to start the analysis with no additional installation.
 
-This tool is prepared to work with:
-- Video-microscopy files (.czi, .lif. .tif, .tiff) to make predictions and train models
-- pix2pix pre-trained models to use in image predictions.
+The container holds everything you need to perform the analysis seamlessly.
 
-Important: note that, during the process, the output result will surely miss loss the metadata of the original image.
+## 🧪 What type of data does Virtual Multiplexing work with?
 
-## Video-tutorial
+This tool is designed to work with:
 
-link
+- **Video-microscopy files** (`.czi`, `.lif`, `.tif`, `.tiff`) for predictions and model training.
+- **pix2pix pre-trained models** for image predictions.
 
-## Getting started
+> 💡 **Note**: The code is optimized for handling **2D images**. However, it is also compatible with **3D image stacks**, allowing you to extend the same functionality to volumetric data if needed.
+
+
+> ⚠️ **Important** The output will likely lose the metadata from the original image.
+
+## 🎥 Video-tutorial
+
+🔗 [**Watch the tutorial here**](#)
+
+## 🛠️ Getting started
 
 ![Getting started](/images/scheme_docker_installation.jpg "")
 
 ### Installing Docker Desktop
 
-First, if you don't have a Docker account, you need to [sign up](https://app.docker.com/signup). Once you've have a Docker account, you need to [install Docker Desktop](https://www.docker.com/products/docker-desktop/) in your computer.
+If you don't have a Docker account yet, you need to [**sign up**](https://app.docker.com/signup). After that, follow the instructions to [**install Docker Desktop**](https://www.docker.com/products/docker-desktop) on your computer.
 
-### Downloading Virtual Multiplexing image
+### Downloading the Virtual Multiplexing image
 
-Once installed, you open it, you sign in and search in the searchbar:
+Once Docker is installed, follow these steps:
 
-```jcredonava/virtual_multiplexing```
+1. **Open Docker**, sign in, and use the search bar to find:
 
-Then, you select the latest version in the 'tag' pop-up menu. Finally, click pull and wait for the image to download.
+    ```bash
+    jcredonava/virtual_multiplexing
+    ```
+
+2. Select the **latest version** in the 'tag' pop-up menu.
+3. Click **pull** and wait for the image to download.
 
 ![Getting started](/images/docker_pull.png "")
 
@@ -50,18 +74,20 @@ Then, you select the latest version in the 'tag' pop-up menu. Finally, click pul
 
 Once the image is downloaded, you have to open your terminal and write the following command:
 
-```docker run --gpus all -it -p 8888:8888 --name virtual_multiplexing -v [[DATA_FOLDER]] virtual_multiplexing:v1```
+```bash
+docker run --gpus all -it -p 8888:8888 --name virtual_multiplexing -v [[PARENT_FOLDER]] virtual_multiplexing:v1
+```
 
 This command launches a Docker container with GPU support for running our image:
 
 - ```docker run```: Start a new Docker container from the downloaded image.
 - ```--gpus all```: Use all available GPUs within the container to perform GPU-accelerated Virtual Multiplexing.
 - ```-it```: Run the container in interactive mode, keeping the container open for input.
-- ```-p 8888:8888```: Map port 8888 from inside the containe, allowing you to access the notebook in your browser via ```localhost:8888```.
+- ```-p 8888:8888```: Map port 8888 from inside the container, allowing you to access the notebook in your browser via ```localhost:8888```.
 
 - ```--name virtual_multiplexing```: Assign a name (virtual_multiplexing in this case) to the container. This name can be used later to reference or manage the container (e.g., stopping or restarting it).
 
-- ```-v [[DATA_FOLDER]]```: The -v flag mounts a volume (a folder from the host machine) into the container. [[DATA_FOLDER]] should be replaced by the path to your data on the host machine.
+- ```-v [[PARENT_FOLDER]]```: The -v flag mounts a volume (a folder from the host machine) into the container. ```[[PARENT_FOLDER]]``` should be replaced by the path to your data on your PC.
 
 - ```virtual_multiplexing:v1```: This specifies the Docker image to use for creating the container. ```virtual_multiplexing``` is the image name, and ```v1``` is the tag (version 1).
 
@@ -69,73 +95,99 @@ Once entered, you'll see something similar to this:
 
 ![CLI](/images/cli.png "")
 
-Now, you just have to click on the ```localhost link```. And thats all! Jupyter lab will open up, ready for you to use!
+Now, you just have to click on the ```localhost link```. And that's all! Jupyter lab will open up, ready for you to use!
 
-## Notebook general workflow
+## 📝 Notebook General Workflow
+
+Virtual Multiplexing is divided into two main modules:
+
+- **Model Generation**: Starting from video-microscopy files (.czi, .lif, .tif, or .tiff), Virtual Multiplexing can train models and use them for signal unmixing.
+- **Signal Unmixing**: Using a pre-trained model (either from the model generation step or another source), Virtual Multiplexing can unmix signals from a mixed-channel image, differentiating subcellular structures with different colors (e.g., red nuclei, green cytoplasm, and membrane).
+
+> ⚠️ **Important**: The output may miss the metadata of the original image during processing.
 
 ![General workflow](/images/steps.jpg "")
 
-### Importing dependencies
+### 🌐 Importing Dependencies
 
-If the Docker image has been successfully installed, you don’t need to install anything else; everything required to use this notebook has already been set up for you. Now, simply run the dependencies cell to import all the necessary packages and get started!
+If the Docker image has been successfully installed, no further installations are needed. Everything required to use this notebook is already set up. Simply run all the cell blocks, and you’ll be ready to go! Let’s explore each module step-by-step.
 
-### Spliting 
+> 💡 **Note**: Each block has a help button that explains the parameters needed to run each step.
 
-To ensure compatibility with the tiling process and the prediction algorithm, it's crucial to understand the characteristics of our images:
+### ✂️ Splitting
 
-- Size: Knowing the exact dimensions of the image (height and width) is essential, especially since the images must be square for correct processing.
-- Number of channels: Whether the image is in grayscale or another format influences how the data is handled and processed.
+To ensure compatibility with the tiling process and prediction algorithm, it’s crucial to understand the characteristics of your images:
 
-Knowing the exact dimensions of the original image is essential for determining an appropriate block size for tiling, ensuring that all tiles are perfectly square. For instance, if the image is 4000x4000 pixels, valid block sizes could be:
+- **Size**: Knowing the exact dimensions (height and width) is essential, as the images must be square for correct processing.
+- **Number of Channels**: The image format (grayscale, etc.) affects how data is handled.
 
-- 2000x2000, producing 4 tiles (2x2)
-- 1000x1000, producing 16 tiles (4x4)
-- 500x500, producing 64 tiles (8x8)
 
-However, if the original image has dimensions like 3276x3276 pixels, valid block sizes could be:
+> 💡 **Example**: if the image is **4000x4000 pixels**, valid block sizes could be:
+> 
+> - **2000x2000**: Producing 4 tiles (2x2)
+> - **1000x1000**: Producing 16 tiles (4x4)
+> - **500x500**: Producing 64 tiles (8x8)
+> 
+> However, for an image with dimensions like **3276x3276 pixels**, valid block sizes could be:
+> 
+> - **1638x1638**: Producing 4 tiles (2x2)
+> - **819x819**: Producing 16 tiles (4x4)
+> 
+> ⚠️ **Important**: In this example, a block size of **600x600 pixels** would be invalid, as it would create rectangular tiles, which cannot be processed correctly by the pipeline.
 
-- 1638x1638, producing 4 tiles (2x2)
-- 819x819, producing 16 tiles (4x4)
+### 🖼️ Read and generate data
 
-In contrast, a block size of 600x600 pixels would be invalid since it would generate rectangular tiles, which are not processed correctly by the pipeline.
+In this section, you can load your microscopy image files (.czi, .lif, .tif, .tiff) for two different purposes:
 
-### Read and generate data
+- **Data for Train/Test**: Prepares paired images suitable for training and testing a virtual multiplexing model.
+- **Data for Predictions**: Processes mixed signals and generates images ready for predictions by the virtual multiplexing model.
 
-In this section, you can load your microscopy image files (.czi, .lif, .tif, and .tiff) for two different purposes, depending on the selected option:
+The preprocessing step ensures the images are in the correct format for the virtual multiplexing pipeline, whether for training, testing, or making predictions.
 
-- Data for Train/Test: This option processes your data to generate paired images suitable for training and testing a virtual multiplexing model. It prepares the images so that the model can learn to identify patterns and relationships within the data.
-- Data for Predictions: This option processes data containing mixed signals and generates images that are ready to be used for predictions by the virtual multiplexing model. The model will use these images to unmix the signals and make predictions based on the data.
+### 🏋️ Model training
 
-The preprocessing step ensures that the images are in the correct format and ready for use with the virtual multiplexing pipeline, whether for training, testing, or making predictions.
+Once you have the necessary data, you can proceed with the following options:
 
-### Model training
+- **Train from Scratch**: Configure and train a virtual multiplexing model from the beginning, setting up the architecture, hyperparameters, and other training configurations.
+- **Continue Training**: Resume training an already pre-trained model with additional data or new parameters.
+- **Test a Model**: Evaluate the performance of a trained model on unseen data, analyzing its accuracy and predictions.
 
-Once you have generated the necessary data, this section allows you to proceed with the following options, depending on the selected window:
+These options provide flexibility for training and testing your virtual multiplexing model tailored to your dataset.
 
-- Train from Scratch: In this option, you will configure and train a virtual multiplexing model from the beginning. You can set up the model architecture, hyperparameters, and other training configurations to start learning from your data.
-- Continue Training: This option allows you to continue training an already pretrained model. You can load the model and resume training with additional data or fine-tune it based on new parameters.
-- Test a Model: This option enables you to evaluate the performance of a trained model. You can test how well the model performs on unseen data and analyze its accuracy, predictions, and overall behavior.
+For those who don’t need to train a model from scratch, you can find pre-trained models in [**this repository**](https://github.com/imAIgene-Dream3D/ZeroCode-VirtualMultiplexing?tab=readme-ov-file#models):
 
-These options provide flexibility to train and test a virtual multiplexing model tailored to your specific dataset and needs.
+- **Open Detector model**: Trained from mixed-signal images, capturing real-world variations.
+- **Synthetic model (recommended)**: Trained using synthetic mixed-signal images, simulating realistic mixed signals.
+- **Weighted model**: Utilizes weighted blending of source images for signal intensity adjustment.
 
-If you don’t need to train a model from scratch, you can find pretrained models in [this repository](https://github.com/imAIgene-Dream3D/ZeroCode-VirtualMultiplexing):
+These models can be directly applied to your virtual multiplexing tasks, saving time on training.
 
-- Open Detector model: This model was trained from mixed-signal images, capturing real-world variations in the signals.
-- Synthetic model (recommended): This model was trained using synthetic mixed-signal images, obtanied by combining source images in a controlled manner, we simulate realistic mixed signals.
-- Weighted model: Similar to the synthetic method, this dataset also utilizes computational techniques. However, it incorporates weighted blending of the source images, allowing for the adjustment of signal intensity.
+### 👩‍💻 Signal unmixing
 
-These models can be used directly for your virtual multiplexing tasks, saving you time on training and allowing you to focus on testing or making predictions with your data.
+After generating your data and obtaining the model, you can **effectively unmix the signals**. Utilizing a **pre-trained model** helps you navigate the complexities of signal unmixing, enhancing your data analysis.
 
-### Virtual Multiplexing
+- **Use your own pre-trained model** or download one suitable for unmixing signals.
+- After predictions, you can **preview the results**.
+- You also have the option to **separate RGB channels** into individual files for further analysis.
 
-After properly generating the data and obtaining the model, you can now unmix the signals. By utilizing a pretrained model, you can efficiently handle the complexities of signal unmixing, enhancing your ability to interpret and analyze the data. This step is crucial for obtaining accurate results and insights from your microscopy images.
+### 🧵 Stitching
 
-### Stitching
+If you used tiled data, it's time to **stitch the predicted data back** into a complete image. This step is vital for reconstructing the original image from the smaller tiles processed individually.
 
-After tiling your data at the beginning of the process, it's now time to stitch the predicted data back together into a complete image. This step is crucial for reconstructing the original image from the smaller tiles that were processed individually.
+To do this, you need to know:
 
-## Acknowledgements
-Work produced with the support of 
+- **Tile size**: The dimensions in pixels of each individual tile.
+- **Number of tiles**: The arrangement of tiles (e.g., 2x2, 4x4, etc.).
 
-## References
+## 🙏 Acknowledgements
 
+This repository builds upon the work done by Ana Ballesteros: [**ZeroCode-VirtualMultiplexing**](https://github.com/imAIgene-Dream3D/ZeroCode-VirtualMultiplexing).
+
+Also, our tool uses work published on the following repositories by **Coen** ([**VirtualMultiplexing3D**](https://github.com/heeycoen/VirtualMultiplexing3D)) and **Rios Group** ([**STAPL3D**](https://github.com/RiosGroup/STAPL3D)).
+
+
+## 📚 References
+
+- Isola, P. et al. (2016). Image-to-Image Translation with Conditional Adversarial Networks. arXiv (Cornell University). [https://doi.org/10.48550/arxiv.1611.07004](https://doi.org/10.48550/arxiv.1611.07004)
+
+- Von Chamier, L. et al. (2021). Democratizing deep learning for microscopy with ZeroCostDL4Mic. Nature Communications, 12(1). [https://doi.org/10.1038/s41467-021-22518-0](https://doi.org/10.1038/s41467-021-22518-0)
