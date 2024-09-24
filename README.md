@@ -183,7 +183,7 @@ To do this, you need to know:
 
 This repository builds upon the work done by Ana Ballesteros: [**ZeroCode-VirtualMultiplexing**](https://github.com/imAIgene-Dream3D/ZeroCode-VirtualMultiplexing).
 
-Also, our tool uses work published on the following repositories by **Coen** ([**VirtualMultiplexing3D**](https://github.com/heeycoen/VirtualMultiplexing3D)) and **Rios Group** ([**STAPL3D**](https://github.com/RiosGroup/STAPL3D)).
+Also, our tool uses work published on the following repositories by **Coen** ([**VirtualMultiplexing3D**](https://github.com/heeycoen/VirtualMultiplexing3D)), **Sam de Blank** ([**Zipping**](https://github.com/Dream3DLab/Zipping)) and **Rios Group** ([**STAPL3D**](https://github.com/RiosGroup/STAPL3D)).
 
 
 ## 📚 References
