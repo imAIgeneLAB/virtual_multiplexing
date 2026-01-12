@@ -38,14 +38,20 @@ This tool is designed to work with:
 - **Video-microscopy files** (`.czi`, `.lif`, `.tif`, `.tiff`) for predictions and model training.
 - **pix2pix pre-trained models** for image predictions.
 
-> 💡 **Note**: The code is optimized for handling **2D images**. However, it is also compatible with **3D image stacks**, allowing you to extend the same functionality to volumetric data if needed.
-
-
 > ⚠️ **Important** The output will likely lose the metadata from the original image.
 
-## 🎥 Video-tutorial
+## 📦 Data and Models for Evaluation
 
-🔗 [**Watch the tutorial here**](#)
+To facilitate the evaluation of this work by the thesis committee, a set of
+pre-trained models, example input images and test data are available at the
+following link:
+
+🔗 **Google Drive repository**:  
+https://drive.google.com/drive/folders/19SEpX16FtHxiKYLkqz9TJ-Z__RvP5tCd?usp=sharing
+
+The folder includes:
+- Example microscopy images (`.czi`, `.lif`, `.tif`)
+- Pre-trained pix2pix models (`.pth`)
 
 ## 🛠️ Getting started
 
