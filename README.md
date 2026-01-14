@@ -81,13 +81,13 @@ Once Docker is installed, follow these steps:
 Once the image is downloaded, you have to open your terminal and write the following command:
 
 ```bash
-docker run --gpus all -it -p 8888:8888 --name virtual_multiplexing -v [[PARENT_FOLDER]] virtual_multiplexing:v1
+docker run -it -p 8888:8888 --name virtual_multiplexing -v [[PARENT_FOLDER]] jcredonava/virtual_multiplexing:v1
 ```
 
 This command launches a Docker container with GPU support for running our image:
 
 - ```docker run```: Start a new Docker container from the downloaded image.
-- ```--gpus all```: Use all available GPUs within the container to perform GPU-accelerated Virtual Multiplexing.
+- ```--gpus all```: OPTIONAL: Use all available GPUs within the container to perform GPU-accelerated Virtual Multiplexing.
 - ```-it```: Run the container in interactive mode, keeping the container open for input.
 - ```-p 8888:8888```: Map port 8888 from inside the container, allowing you to access the notebook in your browser via ```localhost:8888```.
 
@@ -95,7 +95,7 @@ This command launches a Docker container with GPU support for running our image:
 
 - ```-v [[PARENT_FOLDER]]```: The -v flag mounts a volume (a folder from the host machine) into the container. ```[[PARENT_FOLDER]]``` should be replaced by the path to your data on your PC.
 
-- ```virtual_multiplexing:v1```: This specifies the Docker image to use for creating the container. ```virtual_multiplexing``` is the image name, and ```v1``` is the tag (version 1).
+- ```jcredonava/virtual_multiplexing:v1```: This specifies the Docker image to use for creating the container. ```jcredonava/virtual_multiplexing``` is the image name, and ```v1``` is the tag (version 1).
 
 Once entered, you'll see something similar to this:
 
@@ -107,7 +107,7 @@ Now, you just have to click on the ```localhost link```. And that's all! Jupyter
 
 Virtual Multiplexing is divided into two main modules:
 
-- **Model Generation**: Starting from video-microscopy files (.czi, .lif, .tif, or .tiff), Virtual Multiplexing can train models and use them for signal unmixing.
+- **Model Generation**: Starting from video-microscopy files (`.czi`, `.lif`, `.tif`, or `.tiff`), Virtual Multiplexing can train models and use them for signal unmixing.
 - **Signal Unmixing**: Using a pre-trained model (either from the model generation step or another source), Virtual Multiplexing can unmix signals from a mixed-channel image, differentiating subcellular structures with different colors (e.g., red nuclei, green cytoplasm, and membrane).
 
 > ⚠️ **Important**: The output may miss the metadata of the original image during processing.
@@ -143,7 +143,7 @@ To ensure compatibility with the tiling process and prediction algorithm, it’s
 
 ### 🖼️ Read and generate data
 
-In this section, you can load your microscopy image files (.czi, .lif, .tif, .tiff) for two different purposes:
+In this section, you can load your microscopy image files (`.czi`, `.lif`, `.tif`, `.tiff`) for two different purposes:
 
 - **Data for Train/Test**: Prepares paired images suitable for training and testing a virtual multiplexing model.
 - **Data for Predictions**: Processes mixed signals and generates images ready for predictions by the virtual multiplexing model.
