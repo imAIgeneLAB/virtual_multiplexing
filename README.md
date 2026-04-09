@@ -19,7 +19,7 @@ Key features:
 
 This tool is integrated into **Docker**, a platform for designing and distributing applications in the form of images. A Docker image contains all the programs, packages, files, and code necessary to run our application consistently in any environment.
 
-> 💡**Note:** With **Docker** you can ensure that the application runs smoothly on any computer, regardless of its configuration.
+> **Note:** With **Docker** you can ensure that the application runs smoothly on any computer, regardless of its configuration.
 
 ![Docker scheme](/images/docker_scheme.png "https://www.geeksforgeeks.org/what-is-docker-hub/")
 
@@ -38,7 +38,7 @@ This tool is designed to work with:
 - **Video-microscopy files** (`.czi`, `.lif`, `.tif`, `.tiff`) for predictions and model training.
 - **pix2pix pre-trained models** for image predictions.
 
-> ⚠️ **Important** The output will likely lose the metadata from the original image.
+> **Important** The output will likely lose the metadata from the original image.
 
 ## Data and Models for Evaluation
 
